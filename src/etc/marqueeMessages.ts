@@ -1,0 +1,13 @@
+export const mqmessages = [
+    "focus on your breathing!",
+    "HELLO WORLD",
+    "DONT CLICK QUIT!",
+    "THERE ARE FOUR HOLES IN A POLO",
+    "THIS QUIZ IS SO EASY, JUST ASK TRUFFLE!",
+    "TRUFFLE'S UNCLE IS NAMED 'ROCO'.",
+    "OBEY!",
+    "MORE TO COME!",
+    "[object Promise]",
+    "THIS GAME IS FOR FEEBLE-MINDED FOOLS!",
+    "9.8/10 on IMDB!"
+]

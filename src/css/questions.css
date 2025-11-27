@@ -1,0 +1,1042 @@
+#q3,
+#q9,
+#q11,
+#q15 {
+    display: none;
+}
+
+.q3bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q4/bg.png");
+    background-size: cover;
+}
+
+.q3herbert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url("/imgs/q4/herbertA.png");
+    width: 150px;
+    height: 150px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.q3label {
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: monospace;
+    font-size: 35px;
+    color: white;
+}
+
+.q9img1,
+.q9img2 {
+    border: 6px solid #ff510036;
+    border-radius: 5px;
+    box-shadow: 0 0 20px #ff510036;
+}
+
+.q9img1 {
+    width: 200px;
+    height: 100px;
+}
+
+.q9img2 {
+    width: 200px;
+    height: 200px;
+}
+
+.q9img1:hover,
+.q9img2:hover {
+    border: 6px solid #00ff9d36;
+    box-shadow: 0 0 20px #00ff9d36;
+}
+
+#q11 {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+#q11.q11bg {
+    background: url("/imgs/q11/bg.png");
+}
+
+.lswitch {
+    opacity: 0;
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+.lswitch.active {
+    opacity: 1;
+}
+
+#q18>img:hover {
+    opacity: 0.8;
+}
+
+#q18 {
+    display: none;
+}
+
+#q19 {
+    display: none;
+}
+
+#q22 {
+    display: none;
+}
+
+#q22 .q22bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q22/bg.gif");
+}
+
+#q19 .q19bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q19/bg.png");
+    background-repeat: no-repeat;
+    animation: q19bgpan 1s linear infinite alternate;
+}
+
+#q19 .q19herbert {
+    position: fixed;
+    top: 65%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    background-image: url("/imgs/q19/herbert-scared.png");
+    width: 90px;
+    height: 90px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    transition: transform 0.1s ease;
+    transform-origin: bottom center;
+}
+
+.q19girl {
+    position: absolute;
+    width: 80px;
+    height: 110px;
+    background-image: url("/imgs/q19/girl01.png");
+    z-index: 999;
+    background-size: cover;
+    animation: girlrotate 5s linear infinite alternate, girlfly 2s linear infinite forwards;
+}
+
+@keyframes girlfly {
+    100% {
+        left: -15%;
+    }
+}
+
+@keyframes girlrotate {
+    100% {
+        rotate: 360deg;
+    }
+}
+
+.q22rock {
+    position: absolute;
+    left: -15%;
+    filter: drop-shadow(0 0 10px #ff4800);
+    width: 100px;
+    animation: rockfly 2.5s linear forwards;
+}
+
+@keyframes rockfly {
+    100% {
+        left: 120%;
+    }
+}
+
+#q27 {
+    display: none;
+}
+
+.q27truffle {
+    background-image: url("/imgs/q27/truffle.png");
+    width: 180px;
+    height: 220px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 10%;
+    top: 40%;
+}
+
+.q27table {
+    background-image: url("/imgs/q27/table.png");
+    width: 380px;
+    height: 110px;
+    background-size: 380px 110px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 45%;
+    top: 60%;
+}
+
+.q27pill01 {
+    background-image: url("/imgs/q27/alzheimer.png");
+    width: 80px;
+    height: 90px;
+    background-size: 80px 80px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 50%;
+    top: 49%;
+}
+
+.q27pill02 {
+    background-image: url("/imgs/q27/hiv.png");
+    width: 80px;
+    height: 90px;
+    background-size: 80px 80px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 62%;
+    top: 49%;
+}
+
+.q27pill03 {
+    background-image: url("/imgs/q27/schizophrenia.png");
+    width: 80px;
+    height: 90px;
+    background-size: 80px 80px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 74%;
+    top: 49%;
+}
+
+.q27pill03:hover,
+.q27pill02:hover,
+.q27pill01:hover {
+    opacity: 0.7;
+}
+
+#q28 {
+    display: none;
+}
+
+.q28bg {
+    position: fixed;
+    background-image: url("/imgs/q28/bg.png");
+    inset: 0;
+}
+
+.q28neurons {
+    position: fixed;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-70%) scaleY(1.2);
+    height: 600px;
+    filter: saturate(150%);
+}
+
+.q28neurons:active {
+    filter: saturate(200%);
+}
+
+#q32 {
+    display: none;
+}
+
+.q32bg {
+    position: fixed;
+    background-image: url("/imgs/q32/bg.png");
+    inset: 0;
+    z-index: 9999;
+    transform: perspective(600px);
+    transform-origin: bottom center;
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+.q32bg.active {
+    animation: bgdrop 1.5s linear forwards;
+}
+
+@keyframes bgdrop {
+    70% {
+        transform: perspective(600px) rotateX(85deg);
+    }
+
+    90% {
+        transform: perspective(600px) rotateX(80deg);
+    }
+
+    100% {
+        transform: perspective(600px) rotateX(82deg);
+    }
+}
+
+.bee {
+    position: absolute;
+    left: 0%;
+    top: 50%;
+    animation: beemove 3.5s linear forwards;
+    background-image: url("/imgs/q32/bee.gif");
+    width: 64px;
+    height: 64px;
+    background-size: 64px;
+    background-repeat: no-repeat;
+}
+
+@keyframes beemove {
+    100% {
+        left: 120%;
+    }
+}
+
+.something {
+    opacity: 0;
+    font-size: 45px;
+    color: #ff48ff;
+}
+
+.something:hover {
+    opacity: 0.5;
+}
+
+.something:active {
+    opacity: 1;
+}
+
+#q35 {
+    display: none;
+}
+
+.q35bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q35/bg.png");
+}
+
+.q35icon {
+    position: absolute;
+    top: 70%;
+    left: -20%;
+    background-image: url("/imgs/q35/icon.png");
+    width: 72px;
+    height: 72px;
+    background-size: 72px;
+    background-repeat: no-repeat;
+}
+
+.q35icon.jumping {
+    animation: iconmove 3s linear forwards, iconrotate 1s linear forwards;
+}
+
+@keyframes iconrotate {
+    100% {
+        rotate: 360deg;
+    }
+}
+
+.q35spike {
+    width: 72px;
+    height: 72px;
+    background-image: url("/imgs/q35/spike.png");
+    background-size: 72px;
+    background-repeat: no-repeat;
+}
+
+.row.spikes {
+    position: absolute;
+    z-index: 999;
+    gap: 0;
+    top: 70%;
+}
+
+.row.q39 {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    gap: 50px;
+    transform: translate(-50%, -50%);
+}
+
+.row.q39 h1 {
+    font-size: 100px;
+    color: #39b0ff;
+    text-shadow: 0 0 20px #39b0ff8c;
+    cursor: url("/imgs/grabby.png"), auto;
+    transition: all 0.3s ease;
+}
+
+.row.q39 h1:hover {
+    color: #3967ff;
+    text-shadow: 0 0 20px #3988ff8c;
+}
+
+.row.q39 h1:active {
+    scale: 1.05;
+}
+
+#q41 {
+    display: none;
+}
+
+.q41bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q41/bg.png");
+}
+
+.q41herbert {
+    position: fixed;
+    top: 50%;
+    left: 10%;
+    width: 140px;
+    height: 140px;
+    background-image: url("/imgs/q41/herbert.png");
+    background-size: 140px;
+    background-repeat: no-repeat;
+    transition: transform 0.1s linear;
+    transform-origin: center bottom;
+}
+
+.q41herbert.mouthopen {
+    background-image: url("/imgs/q41/openwide.png");
+    transform: scaleY(1.5);
+}
+
+.q41text {
+    position: fixed;
+    font-family: monospace;
+    font-size: 45px;
+    font-weight: bold;
+    top: 0;
+    right: 0;
+    margin: 20px;
+    transition: all 0.05s ease;
+    background-color: #5739ff;
+    background-image: linear-gradient(#cc4aff, #815eff);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #6e4dff6c;
+    font-weight: bolder;
+    pointer-events: none;
+}
+
+.food {
+    width: 72px;
+    height: 72px;
+    background-image: url("/imgs/q41/cookie.png");
+    background-size: 72px;
+    position: absolute;
+    top: 55%;
+    left: 110%;
+    animation: foodmove 1.5s linear forwards;
+    background-repeat: no-repeat;
+}
+
+.food.hazard {
+    background-image: url("/imgs/q41/clock.png");
+}
+
+@keyframes foodmove {
+    100% {
+        left: -20%;
+        rotate: 360deg;
+    }
+}
+
+#q44 {
+    display: none;
+}
+
+.q44bg {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    cursor: none;
+}
+
+.q44truffle {
+    width: 64px;
+    height: 64px;
+    background-image: url("/imgs/truffle01.png");
+    background-size: 64px;
+    background-repeat: no-repeat;
+    opacity: 0.01;
+    cursor: url("/imgs/grabby.png"), auto;
+    transition: all 0.3s ease;
+}
+
+.q44truffle.tocenter {
+    animation: tocenter 3s linear forwards;
+    filter: drop-shadow(0 0 30px gold);
+}
+
+@keyframes tocenter {
+    100% {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(360deg) scale(3);
+    }
+}
+
+.q44truffle.active {
+    opacity: 1;
+    scale: 1.1;
+}
+
+#q47 {
+    display: none;
+    cursor: none;
+}
+
+.q47bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q47/bg.png");
+    z-index: 20;
+    opacity: 0.67;
+}
+
+.q47bg2 {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q47/bg2.png");
+    z-index: -999;
+    opacity: 0.3;
+}
+
+.q47car {
+    position: fixed;
+    top: 45%;
+    left: 10%;
+    width: 48px;
+    height: 48px;
+    background-image: url("/imgs/q47/penguin.png");
+    background-repeat: no-repeat;
+    background-size: 50px;
+    filter: drop-shadow(0 0 40px #3c8aff);
+}
+
+.q47endpoint {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    top: 5%;
+    left: 70%;
+    background-size: 32px;
+    background-image: url("/imgs/q47/endpoint.png");
+    animation: q47endpointpulse 0.3s ease infinite alternate;
+    filter: drop-shadow(0 0 20px #ff2727);
+}
+
+@keyframes q47endpointpulse {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+.q47obs {
+    position: absolute;
+    z-index: -10;
+    background: linear-gradient(#3c8aff, #006eff, #5297ff, #60a0ff);
+    opacity: 0.6;
+    box-shadow: 0 0 40px #3c8aff;
+}
+
+#q55 {
+    display: none;
+}
+
+.q55text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 100px;
+    background-color: #ff7839;
+    background-image: linear-gradient(#ff654a, #ff915e);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #ff854d6c;
+}
+
+.q55obj {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: none;
+}
+
+.q55obj.fish {
+    background-image: url("/imgs/q55/fish.png");
+}
+
+.q55obj.herbert {
+    width: 180px;
+    background-image: url("/imgs/q55/herbert.png");
+}
+
+.q55obj.duck {
+    background-image: url("/imgs/pipsqueak01.png");
+}
+
+.q55obj.egg {
+    width: 150px;
+    background-image: url("/imgs/q55/egg.png");
+}
+
+.q55obj.eye {
+    width: 170px;
+    background-image: url("/imgs/q55/eye.png");
+}
+
+.q55obj.pill {
+    width: 170px;
+    background-image: url("/imgs/q55/pill.png");
+}
+
+.q55input {
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #5739ff;
+    background-image: linear-gradient(#cc4aff, #815eff);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #6e4dff6c;
+    font-size: 55px;
+    font-weight: bolder;
+}
+
+#q58 {
+    display: none;
+}
+
+.q58bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q58/bg.png");
+    background-size: 850px 600px;
+    animation: q58bg3d 1s linear forwards .5s;
+    transform: perspective(600px);
+    cursor: none;
+}
+
+.q58bg.threedreverse {
+    animation: q58bg3dreverse 1s linear forwards;
+}
+
+@keyframes q58bg3dreverse {
+    100% {
+        transform: perspective(600px) rotateY(-180deg);
+    }
+}
+
+.q58bg.static {
+    animation: none;
+    transform: none;
+}
+
+.q58herbert {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    background-image: url("/imgs/q58/herbert01.gif");
+    background-size: 200px;
+    background-repeat: no-repeat;
+    transform: translate(-50%, -50%) perspective(600px);
+    animation: q58herbert3d 1s linear forwards .5s;
+}
+
+.q58herbert.threedreverse {
+    animation: q58herbert3dreverse 1s linear forwards;
+}
+
+@keyframes q58bg3d {
+    100% {
+        transform: perspective(600px) rotateY(180deg);
+    }
+}
+
+@keyframes q58herbert3dreverse {
+    80% {
+        transform: translate(-50%, -50%) perspective(600px) rotateY(0deg) scale(5);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) perspective(600px) rotateY(0deg) scale(1);
+    }
+}
+
+@keyframes q58herbert3d {
+    100% {
+        transform: translate(-50%, -50%) perspective(600px) rotateY(90deg) scale(5);
+    }
+}
+
+.q58crosshair {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    background-image: url("/imgs/q58/crosshair.png");
+    background-size: 48px;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: none;
+    z-index: 9999;
+}
+
+.q58crosshair.active {
+    opacity: 0.5;
+    animation: q58crosshairidle 0.2s ease infinite alternate;
+}
+
+@keyframes q58crosshairidle {
+    100% {
+        opacity: 0.7;
+        rotate: 10deg;
+    }
+}
+
+.q58demon {
+    position: fixed;
+    top: 50%;
+    left: -20%;
+    width: 120px;
+    height: 120px;
+    background-image: url("/imgs/q58/demon.gif");
+    background-size: 120px;
+    background-repeat: no-repeat;
+    cursor: none;
+    animation: q58demonfloat 2s linear forwards;
+    scale: -1 1;
+    transition: all 0.35s ease;
+    filter: drop-shadow(0 0 20px darkred);
+}
+
+@keyframes q58demonfloat {
+    100% {
+        left: 120%;
+    }
+}
+
+@keyframes q58demonmoveleft {
+    100% {
+        left: -20%;
+    }
+}
+
+.q58collbox {
+    position: fixed;
+    width: 64px;
+    height: 64px;
+    top: 50%;
+    left: -20%;
+    background: rgba(255, 0, 0, 0.678);
+    opacity: 0;
+}
+
+.q58demon.hit {
+    scale: 0;
+    opacity: 0;
+    rotate: 360deg;
+}
+
+.q58text {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 20px;
+    font-family: monospace;
+    font-size: 40px;
+    font-weight: bolder;
+    z-index: 9999;
+    background-color: #5739ff;
+    background-image: linear-gradient(#cc4aff, #815eff);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #6e4dff6c;
+    font-weight: bolder;
+    pointer-events: none;
+}
+
+#q62 {
+    display: none;
+}
+
+#q62btn {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 92px;
+}
+
+#q64 {
+    display: none;
+}
+
+.q64cone {
+    position: fixed;
+    width: 64px;
+    height: 64px;
+    background-image: url("/imgs/q64/truffle.png");
+    background-size: 64px;
+    top: 46%;
+    left: 46%;
+    transition: scale 0.1s ease;
+    filter: drop-shadow(0 0 20px #ff802b8a);
+}
+
+.q64text {
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 20px;
+    font-family: "comic sans ms", sans-serif;
+    font-size: 45px;
+    font-weight: bolder;
+    z-index: 9999;
+    background-color: #39ff9c;
+    background-image: linear-gradient(#b1b1b1, #727272);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #646464e1;
+    font-weight: bolder;
+    pointer-events: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.q64letter {
+    position: absolute;
+    width: 48px;
+    height: 32px;
+    background-image: url("/imgs/q64/letter.png");
+    background-size: 48px 32px;
+    animation: q64letterappear 0.2s ease forwards;
+    filter: drop-shadow(0 0 20px #272727bb);
+}
+
+.q64letter.red {
+    background-image: url("/imgs/q64/letter_red.png");
+    filter: drop-shadow(0 0 20px #ff0000bb);
+}
+
+.q64letter.green {
+    background-image: url("/imgs/q64/letter_green.png");
+    filter: drop-shadow(0 0 20px #00ff0dbb);
+}
+
+.q64letter.blue {
+    background-image: url("/imgs/q64/letter_blue.png");
+    filter: drop-shadow(0 0 20px #0084ffbb);
+}
+
+@keyframes q64letterappear {
+    0% {
+        opacity: 0;
+        scale: 0;
+    }
+
+    100% {
+        opacity: 1;
+        scale: 1;
+        rotate: 360deg;
+    }
+}
+
+.q64mailman {
+    position: fixed;
+    top: 51%;
+    left: 90%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 64px;
+    background-image: url("/imgs/q64/mailman.png");
+    background-size: 64px;
+    filter: drop-shadow(0 0 20px #3fff3f);
+}
+
+.q64mailman.damage {
+    animation: q64mailmandamage 0.2s ease;
+}
+
+.q64mailman.pulse {
+    animation: q64mailmanpulse 0.5s ease alternate infinite;
+    background-image: url("/imgs/q64/mailman_happy.png");
+}
+
+@keyframes q64mailmanpulse {
+    100% {
+        transform: translate(-50%, -50%) scaleY(1.4);
+    }
+}
+
+@keyframes q64mailmandamage {
+    100% {
+        transform: translate(-50%, -50%) scaleX(1.5);
+        filter: drop-shadow(0 0 20px #3fff3f) hue-rotate(220deg);
+    }
+}
+
+.q64effect {
+    position: absolute;
+    font-size: 40px;
+    text-shadow: 0 0 20px red;
+    color: red;
+    font-weight: bolder;
+    font-family: "comic sans ms", sans-serif;
+    animation: q64effectanim 0.8s linear forwards;
+}
+
+.q64effect.normal {
+    position: absolute;
+    font-size: 40px;
+    z-index: 9999;
+    background-color: #ffffff;
+    background-image: linear-gradient(#b1b1b1, #bbbbbb);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #646464e1;
+    font-weight: bolder;
+    pointer-events: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.q64effect.red {
+    position: absolute;
+    font-size: 40px;
+    z-index: 9999;
+    background-color: #fd5151;
+    background-image: linear-gradient(#ff6767, #ff1616);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #fd2d2de1;
+    font-weight: bolder;
+    pointer-events: none;
+}
+
+.q64effect.green {
+    position: absolute;
+    font-size: 40px;
+    z-index: 9999;
+    background-color: #51fd5f;
+    background-image: linear-gradient(#67ff95, #4cff45);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #6ffd2de1;
+    font-weight: bolder;
+}
+
+.q64effect.blue {
+    position: absolute;
+    font-size: 40px;
+    z-index: 9999;
+    background-color: #5196fd;
+    background-image: linear-gradient(#6797ff, #4845ff);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #422dfde1;
+    font-weight: bolder;
+}
+
+@keyframes q64effectanim {
+    100% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+}
+
+#q66 {
+    display: none;
+}
+
+#q66 {
+    position: fixed;
+    inset: 0;
+    background: black;
+    z-index: 9999;
+    color: white;
+    font-family: Consolas;
+    font-weight:100;
+    cursor: none;
+}
+
+.q66cont {
+    margin: 5px;
+    font-size: 18px;
+}
+
+.q66cursor {
+    height: 17px;
+    width: 2px;
+    background: white;
+}

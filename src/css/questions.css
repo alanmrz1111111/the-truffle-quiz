@@ -8,7 +8,7 @@
 .q3bg {
     position: fixed;
     inset: 0;
-    background-image: url("/imgs/q4/bg.png");
+    background-image: url("/imgs/q41/bg.png");
     background-size: cover;
 }
 
@@ -105,7 +105,7 @@
 #q19 .q19bg {
     position: fixed;
     inset: 0;
-    background-image: url("/imgs/q19/bg.png");
+    background-image: url("/imgs/q41/bg.png");
     background-repeat: no-repeat;
     animation: q19bgpan 1s linear infinite alternate;
 }
@@ -711,10 +711,10 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 48px;
-    height: 48px;
+    width: 24px;
+    height: 24px;
     background-image: url("/imgs/q58/crosshair.png");
-    background-size: 48px;
+    background-size: 24px;
     background-repeat: no-repeat;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -764,16 +764,18 @@
 
 .q58collbox {
     position: fixed;
-    width: 64px;
-    height: 64px;
+    width: 32px;
+    height: 32px;
     top: 50%;
     left: -20%;
     background: rgba(255, 0, 0, 0.678);
     opacity: 0;
+    cursor: none;
+    transform: translate(8%, 8%);
 }
 
 .q58demon.hit {
-    scale: 0;
+    transform: scale(0);
     opacity: 0;
     rotate: 360deg;
 }
@@ -1026,7 +1028,7 @@
     z-index: 9999;
     color: white;
     font-family: Consolas;
-    font-weight:100;
+    font-weight: 100;
     cursor: none;
 }
 
@@ -1039,4 +1041,306 @@
     height: 17px;
     width: 2px;
     background: white;
+}
+
+#q70 {
+    display: none;
+}
+
+.q70bg {
+    position: fixed;
+    background-image: url("/imgs/q70/bg.png");
+    inset: 0;
+    background-size: 850px 600px;
+    filter: hue-rotate(250deg);
+}
+
+.q70icon {
+    position: absolute;
+    top: 70%;
+    left: 10%;
+    background-image: url("/imgs/q70/icon.png");
+    width: 72px;
+    height: 72px;
+    background-size: 72px;
+    background-repeat: no-repeat;
+    z-index: 999;
+}
+
+.q70icon.jumping {
+    animation: q70iconrotate 1s linear forwards;
+}
+
+@keyframes q70iconrotate {
+    100% {
+        rotate: 180deg;
+    }
+}
+
+.q73rock {
+    position: absolute;
+    top: -15%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    background-image: url("/imgs/q73/rock.gif");
+    background-size: 64px;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 0 20px #ff1e0e);
+    rotate: 45deg;
+    animation: q73rockmove 0.5s linear forwards;
+}
+
+@keyframes q73rockmove {
+    100% {
+        top: 115%;
+    }
+}
+
+#q72 {
+    display: none;
+}
+
+.q72num {
+    font-size: 140px;
+    font-family: "comic sans ms", sans-serif;
+    position: relative;
+    font-weight: bolder;
+    background: #ff898944;
+    border-radius: 5px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+.q72num.one {
+    color: #30e730;
+    text-shadow: 0 0 20px #37ff378f;
+    -webkit-text-stroke: 6px #36d636;
+    background: #8dff8944;
+}
+
+.q72num.two {
+    color: #e73030;
+    text-shadow: 0 0 20px #ff37378f;
+    -webkit-text-stroke: 6px #d63636;
+    background: #ff898944;
+}
+
+.q72num.three {
+    color: #3085e7;
+    text-shadow: 0 0 20px #3794ff8f;
+    -webkit-text-stroke: 6px #367bd6;
+    background: #89caff44;
+}
+
+.q72num.four {
+    color: #ffae17;
+    text-shadow: 0 0 20px #ffb9378f;
+    -webkit-text-stroke: 6px #ffa137;
+    background: #fff78944;
+}
+
+.q72num:hover {
+    opacity: 0.5;
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+.q72num:active {
+    opacity: 1;
+}
+
+.q72num.grayscale {
+    filter: grayscale(100%) brightness(50%);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.q72numpos {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: red;
+    font-size: 40px;
+    filter: grayscale(100%) brightness(100%);
+    filter: none;
+    z-index: 9999;
+    -webkit-text-stroke: 0;
+}
+
+#q75 {
+    display: none;
+}
+
+.q75bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q75/bg.gif");
+    background-size: 850px 600px;
+}
+
+.q75earth {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 210px;
+    height: 210px;
+    background-image: url("/imgs/q75/earth.png");
+    background-size: 210px;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 0 80px #2189ff4b);
+    transition: all 0.3s ease;
+}
+
+.q75earth.gone {
+    transform: translate(-50%, -50%) scale(0) rotate(360deg);
+    opacity: 0;
+}
+
+.q75herbert {
+    width: 150px;
+    height: 250px;
+    background-image: url("/imgs/q75/herbert.png");
+    background-size: 150px 250px;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 30%;
+    left: -20%;
+    z-index: 999;
+    filter: drop-shadow(0 0 80px #ff15ff34);
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+.q75herbert.gliding {
+    animation: q75herbertglide 2s linear forwards;
+}
+
+.q75herbert.dead {
+    animation: q75herbertdie 0.3s linear forwards;
+}
+
+.q75herbert.mouthclosed {
+    background-image: url("/imgs/q75/herbert_mouthclosed.png");
+    width: 150px;
+    height: 150px;
+    background-size: 150px;
+    top: 37%;
+    pointer-events: none;
+    cursor: url("/imgs/cursor.png"), auto;
+}
+
+@keyframes q75herbertdie {
+    100% {
+        scale: 0;
+        rotate: 360deg;
+        opacity: 0;
+    }
+}
+
+@keyframes q75herbertglide {
+    0% {
+        left: -20%;
+        transform: scaleY(1.5);
+    }
+
+    100% {
+        left: 41%;
+        transform: scaleY(1);
+    }
+}
+
+.q75ufo {
+    position: absolute;
+    width: 80px;
+    height: 64px;
+    background-size: 80px 64px;
+    background-image: url("/imgs/q75/ufo.png");
+    top: 18%;
+    left: 110%;
+    z-index: 999;
+    filter: drop-shadow(0 0 60px #71ff2fd3);
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+.q75ufo.flying {
+    animation: q75ufofly 2s linear forwards;
+}
+
+.q75ufo.dead {
+    animation: q75ufodead 0.6s linear forwards;
+}
+
+@keyframes q75ufodead {
+    100% {
+        top: 120%;
+        rotate: 360deg;
+    }
+}
+
+@keyframes q75ufofly {
+    100% {
+        left: -20%;
+    }
+}
+
+.q75bomb {
+    position: absolute;
+    width: 48px;
+    height: 64px;
+    animation: q75bombdrop 0.15s linear forwards;
+    background-image: url("/imgs/q75/bomb.png");
+    background-size: 48px 64px;
+    filter: drop-shadow(0 0 60px #ff5f5f);
+    transition: all 0.3s ease;
+}
+
+.q75bomb.boom {
+    scale: 2;
+    opacity: 0;
+}
+
+@keyframes q75bombdrop {
+    100% {
+        translate: 0 100px;
+    }
+}
+
+.q75pooboo {
+    position: absolute;
+    top: 33%;
+    left: 110%;
+    width: 215px;
+    height: 190px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url("/imgs/q75/pooboo.gif");
+    z-index: 999;
+    filter: drop-shadow(0 0 40px #57ff5779);
+    cursor: url("/imgs/grabby.png"), auto;
+    transition: scale 0.3s ease, opacity 0.3s ease;
+}
+
+.q75pooboo.gliding {
+    animation: q75poobooglide 1s linear forwards;
+}
+
+.q75pooboo.stationary {
+    background-image: url("/imgs/q75/pooboo_stationary.png");
+    pointer-events: none;
+    cursor: url("/imgs/cursor.png"), auto;
+}
+
+.q75pooboo.dead {
+    scale: 1 3;
+    opacity: 0;
+    background-image: url("/imgs/q75/pooboo_mouthopen.png");
+}
+
+@keyframes q75poobooglide {
+    100% {
+        left: 40%;
+    }
 }

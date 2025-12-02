@@ -1,3 +1,5 @@
+import { playAudio } from "./core/audio"
+
 export function querySelectorHTML(selector: string) {
     return document.querySelector(selector) as HTMLElement
 }
@@ -126,7 +128,7 @@ export function createBoom({ x, y, width, height, usePercentages }: { x: number,
         usePercentages
     }) as HTMLImageElement
 
-    boom.src = "/imgs/boom.png"
+    boom.src = "/imgs/boom02.png"
     setImgDimensions(width, height, boom)
 
     boom.style.animation = "boom 0.4s linear forwards"
@@ -173,4 +175,13 @@ export function setCursorVisibilityState(state: "visible" | "hidden") {
     } else if (state == "hidden") {
         document.body.style.cursor = "none"
     }
+}
+
+export function q75makeCopyrightBtnVisible() {
+    const copyrightbtn = querySelectorHTML(".copyrightbtn")
+
+    copyrightbtn.style.display = "none"
+
+    copyrightbtn.dataset.btn = ""
+    delete copyrightbtn.dataset.correct
 }

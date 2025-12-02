@@ -9,7 +9,7 @@ export const state = {
         music: MUSIC_VOLUME
     },
     inMainMenu: false, 
-    questionNumber: questions.length,
+    questionNumber: questions.length - 32,
     currentBombTimer: 0,
     currentBombInterval: 0,
     lives: 3,
@@ -17,5 +17,6 @@ export const state = {
     danger: false,
     ignoreInput: false,
     spawnBouncyThings: true,
-    enableTab: false
+    enableTab: false,
+    devMode: true
 }

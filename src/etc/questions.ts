@@ -1,7 +1,7 @@
 import { playAudio, playRandomAudio } from "../core/audio";
 import { state } from "../core/state";
-import { getGameBGMAudioObject, hideBackground, onCorrectAns, onWrongAns, setBackgroundType, showBackground } from "../main";
-import { aabb, append, create, createBoom, createObjectOnPosB, qsaHTML, querySelectorHTML, randFloat, random, setCursorVisibilityState, setImgDimensions, setQuestionAreaPointerEventState, showObjectWithBounce, wait } from "../utils";
+import { getGameBGMAudioObject, hideBackground, onCorrectAns, onWrongAns, showBackground } from "../main";
+import { aabb, append, create, createBoom, createObjectOnPosB, q75makeCopyrightBtnVisible, qsaHTML, querySelectorHTML, randFloat, random, setCursorVisibilityState, setImgDimensions, setQuestionAreaPointerEventState, showObjectWithBounce, wait } from "../utils";
 import { Question } from "./showQuestion";
 
 export const questions: Question[] = [
@@ -311,6 +311,7 @@ export const questions: Question[] = [
             }) as HTMLImageElement
 
             const bg = querySelectorHTML("#q11")
+            let clicked = false
 
             lswitch.src = "/imgs/q11/lightswitch.png"
             lswitch.draggable = false
@@ -319,6 +320,9 @@ export const questions: Question[] = [
             lswitch.classList.add("lswitch")
 
             lswitch.addEventListener("click", async () => {
+                if (clicked) return
+                clicked = true
+
                 lswitch.classList.add("active")
                 bg.classList.add("q11bg")
 
@@ -623,22 +627,9 @@ export const questions: Question[] = [
 
                 girls.forEach(girl => {
                     const girlRect = girl.getBoundingClientRect()
-                    const margin = 15
-                    const smallerRect = {
-                        left: herbertRect.left + margin,
-                        right: herbertRect.right - margin,
-                        top: herbertRect.top + margin,
-                        bottom: herbertRect.bottom - margin
-                    }
+                    const margin = 20
 
-                    const isColliding = !(
-                        smallerRect.right < girlRect.left ||
-                        smallerRect.left > girlRect.right ||
-                        smallerRect.bottom < girlRect.top ||
-                        smallerRect.top > girlRect.bottom
-                    )
-
-                    if (isColliding && canLoseLife) {
+                    if (aabb(herbertRect, girlRect, margin) && canLoseLife) {
                         canLoseLife = false
 
                         herbert.classList.add("hit")
@@ -1372,8 +1363,9 @@ export const questions: Question[] = [
 
             let mouthOpen = false;
             let rafId: number;
-            let goal = random(10, 12)
+            let goal = 15
             let foodEaten = 0;
+            let canLoseLife = true
 
             let int1: number;
 
@@ -1431,6 +1423,16 @@ export const questions: Question[] = [
                     objs.splice(index, 1)
 
                     el.remove()
+
+                    if (!isHazard && canLoseLife) {
+                        onWrongAns()
+
+                        canLoseLife = false
+
+                        setTimeout(() => {
+                            canLoseLife = true
+                        }, 1000);
+                    }
                 })
             }
 
@@ -2214,7 +2216,7 @@ export const questions: Question[] = [
             let rafId: number
             let gameStarted = false
             let int1: number
-            let goal = random(10, 15)
+            let goal = 12
             let demonsShot = 0;
 
             counter.textContent = `${demonsShot}/${goal}`
@@ -2238,12 +2240,13 @@ export const questions: Question[] = [
 
                 boom.style.cursor = "none"
                 boom.style.opacity = "0.5"
+                boom.style.pointerEvents = "none"
 
                 const collBox = create("div")
                 collBox.classList.add("q58collbox")
 
-                collBox.style.left = `${e.clientX - 20}px`
-                collBox.style.top = `${e.clientY - 20}px`
+                collBox.style.left = `${e.clientX - 10}px`
+                collBox.style.top = `${e.clientY - 10}px`
 
                 append(collBox)
                 collisionBoxes.push(collBox)
@@ -2260,7 +2263,14 @@ export const questions: Question[] = [
             }
 
             function update() {
+                if (state.gameOver) {
+                    cancelAnimationFrame(rafId)
+                    demonEls.forEach(demon => demon.remove())
+                }
+
                 rafId = requestAnimationFrame(update);
+
+                const demonsToRemove: HTMLElement[] = [];
 
                 for (let i = demonEls.length - 1; i >= 0; i--) {
                     const demonEl = demonEls[i];
@@ -2270,29 +2280,23 @@ export const questions: Question[] = [
                         const collBox = collisionBoxes[j];
                         const collRect = collBox.getBoundingClientRect();
 
-                        const isColliding =
-                            demonRect.x < collRect.x + collRect.width &&
-                            demonRect.x + demonRect.width > collRect.x &&
-                            demonRect.y < collRect.y + collRect.height &&
-                            demonRect.y + demonRect.height > collRect.y;
-
-                        if (isColliding) {
-                            playRandomAudio([
-                                "squish01",
-                                "squish02"
-                            ])
-
-                            updateCount()
-
-                            demonEl.classList.add("hit")
-
-                            demonEl.remove();
-                            demonEls.splice(i, 1);
-
+                        if (aabb(demonRect, collRect, 0) && !demonEl.classList.contains("hit")) {
+                            playRandomAudio(["squish01", "squish02"]);
+                            updateCount();
+                            demonEl.classList.add("hit");
+                            demonsToRemove.push(demonEl);
                             break;
                         }
                     }
                 }
+
+                demonsToRemove.forEach(demon => {
+                    setTimeout(() => {
+                        const index = demonEls.indexOf(demon);
+                        if (index !== -1) demonEls.splice(index, 1);
+                        demon.remove();
+                    }, 300);
+                });
             }
 
             function updateCount() {
@@ -2330,6 +2334,8 @@ export const questions: Question[] = [
                 demonEl.style.left = appearFromRight ? "100%" : "0%"
                 demonEl.style.top = `${random(10, 80)}%`
 
+                demonEl.style.animationDuration = `${randFloat(1.3, 1.7)}s`
+
                 if (appearFromRight) {
                     demonEl.style.animationName = "q58demonmoveleft"
                     demonEl.style.scale = "1 1"
@@ -2343,6 +2349,8 @@ export const questions: Question[] = [
                     const index = demonEls.indexOf(demonEl)
                     demonEls.splice(index, 1)
                     demonEl.remove()
+
+                    onWrongAns()
                 })
             }, 500);
 
@@ -2488,7 +2496,7 @@ export const questions: Question[] = [
         content: `<h1 style="font-size: 70px;"></h1>`,
         questionEl: querySelectorHTML("#q64"),
         bomb: {
-            duration: 12
+            duration: 13
         },
         onQuestion() {
             const player = querySelectorHTML(".q64cone")
@@ -2520,7 +2528,7 @@ export const questions: Question[] = [
             let collected = 0;
 
             const accel = 2;
-            const friction = 0.1
+            const friction = 0.05
             const maxSpeed = 8
 
             function updateCounter() {
@@ -2688,7 +2696,7 @@ export const questions: Question[] = [
                 letters.forEach(letter => {
                     const letterRect = letter.getBoundingClientRect()
                     const playerRect = player.getBoundingClientRect()
-                    const margin = 10
+                    const margin = 5
 
                     if (aabb(playerRect, letterRect, margin) && keys.w && !carryingLetter) {
                         player.appendChild(letter)
@@ -2757,12 +2765,12 @@ export const questions: Question[] = [
                 fontSize: 40
             },
             {
-                text: "ON YOUR ROOM",
+                text: "IN YOUR ROOM",
                 correct: false,
                 fontSize: 40
             },
             {
-                text: "ON YOUR BATHROOM",
+                text: "ON THE BATHROOM",
                 correct: false,
                 fontSize: 40
             },
@@ -2775,12 +2783,14 @@ export const questions: Question[] = [
         content: `<h1 style="font-size: 50px;"></h1>`,
         questionEl: querySelectorHTML("#q66"),
         onQuestion() {
-            // getGameBGMAudioObject()?.pause()
+            getGameBGMAudioObject()?.pause()
 
             const cursor = querySelectorHTML(".q66cursor")
             const inputLabel = querySelectorHTML(".q66inputlabel")
+            const livesLabel = querySelectorHTML("#q66liveslabel")
 
             let input = ""
+            livesLabel.textContent = `${state.lives}`
 
             setInterval(() => {
                 if (cursor.style.opacity == "1") {
@@ -2791,6 +2801,25 @@ export const questions: Question[] = [
             }, 500);
 
             function onInput(e: KeyboardEvent) {
+                if (e.ctrlKey || e.altKey || e.shiftKey) return;
+
+                if (e.key == "Enter") {
+                    if (input == "1") {
+                        onCorrectAns()
+
+                        document.removeEventListener("keydown", onInput)
+
+                    } else {
+                        onWrongAns()
+                        livesLabel.textContent = `${state.lives}`
+                        input = ""
+
+                        inputLabel.textContent = input;
+
+                        return;
+                    }
+                }
+
                 if (e.key == "Backspace") {
                     input = input.slice(0, -1)
                 } else {
@@ -2803,4 +2832,648 @@ export const questions: Question[] = [
             document.addEventListener("keydown", onInput)
         },
     },
+    {
+        content: `<h1 style="font-size: 50px;">WHAT IS THE VALUE <p> OF GRAVITY ON EARTH?</h1>`,
+        bomb: {
+            duration: 10
+        },
+        answers: [
+            {
+                text: "9.90",
+                correct: false,
+                fontSize: 70
+            },
+            {
+                text: "9.83",
+                correct: false,
+                fontSize: 70
+            },
+            {
+                text: "9.81",
+                correct: false,
+                fontSize: 70
+            },
+            {
+                text: "9.80",
+                correct: true,
+                fontSize: 70
+            },
+        ],
+        onQuestion() {
+            getGameBGMAudioObject()?.play()
+        },
+    },
+    {
+        content: `<h1 style="font-size: 35px;">WE DON'T TALK ENOUGH ABOUT HOW <p> STRESSFUL HALLOWEEN COSTUMES <p> ARE FOR THE ADHD COMMUNITY.</h1>`,
+        answers: [
+            {
+                text: "THAT'S TRUE.",
+                correct: false,
+                fontSize: 45
+            },
+            {
+                text: "OMG YOU PEOPLE CAN'T DO ANYTHING.",
+                correct: true,
+                fontSize: 30
+            },
+            {
+                text: "QUIT YAPPING",
+                correct: false,
+                fontSize: 45
+            },
+            {
+                text: "HALLOWEEN IS SATANIC",
+                correct: false,
+                fontSize: 40
+            },
+        ],
+        onQuestion() { },
+    },
+    {
+        content: `<h1 style="font-size: 50px;">WHICH OF THE FOLLOWING <p> GLIDES OVER ALL?</h1>`,
+        answers: [
+            {
+                text: "TOM CRUISE",
+                correct: false,
+                fontSize: 50
+            },
+            {
+                text: "JOE BIDEN",
+                correct: false,
+                fontSize: 50
+            },
+            {
+                text: "HANK SCHRADER",
+                correct: true,
+                fontSize: 40
+            },
+            {
+                text: "PLANES",
+                correct: false,
+                fontSize: 60
+            },
+        ],
+        onQuestion() { },
+    },
+    {
+        content: `<h1 style="font-size: 50px;">WHAT DOES 'PPAP' STAND FOR?</h1>`,
+        answers: [
+            {
+                text: "PEN PINEAPPLE APPLE PEN",
+                correct: true,
+                fontSize: 40
+            },
+            {
+                text: "PRODUCTION PART APPROVAL PROCESS",
+                correct: false,
+                fontSize: 35
+            },
+            {
+                text: "PENIS PORRIDGE AWAKE PIZZA",
+                correct: false,
+                fontSize: 38
+            },
+            {
+                text: "PLANES PLANNING A PEEWEE",
+                correct: false,
+                fontSize: 35
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">WHAT IS THE HIGHEST <p> RATED SHOW ON IMDB?</h1>`,
+        answers: [
+            {
+                text: "BETTER CALL SAUL",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "THE SOPRANOS",
+                correct: false,
+                fontSize: 45
+            },
+            {
+                text: "DEXTER",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "BREAKING BAD",
+                correct: true,
+                fontSize: 45
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 60px;">ORDER ALPHABETICALLY.</h1>`,
+        moveText: {
+            duration: 0.5,
+            delay: 1000,
+            easing: "linear"
+        },
+        bomb: {
+            duration: 10
+        },
+        onQuestion() {
+            const numEls = qsaHTML(".q72num")
+            const nums: string[] = []
+
+            showObjectWithBounce({
+                duration: 0.5,
+                easing: "ease",
+                el: querySelectorHTML("#q72"),
+                display: "flex",
+                useTransformTranslate: false
+            })
+
+            function onNumClick(e: MouseEvent) {
+                const target = e.target as HTMLElement
+
+                if (target.dataset.q72Num) {
+                    nums.push(target.dataset.q72Num)
+                    setNumPosition(target, target.dataset.q72Num)
+
+                    playRandomAudio(["clank", "clang01"])
+                }
+            }
+
+            function setNumPosition(el: HTMLElement, num: string) {
+                el.classList.add("grayscale")
+
+                const posEl = create("h2")
+
+                posEl.classList.add("q72numpos")
+
+                let ordinal: string = "st";
+                const index = nums.indexOf(num)
+
+                switch (index) {
+                    case 0:
+                        ordinal = "st"
+                        break;
+
+                    case 1:
+                        ordinal = "nd"
+                        break;
+
+                    case 2:
+                        ordinal = "rd"
+                        break;
+
+                    default:
+                        ordinal = "th"
+                        break;
+                }
+
+                posEl.textContent = `${index + 1}${ordinal}`
+
+                el.appendChild(posEl)
+
+                const correct =
+                    nums.indexOf("four") == 0 &&
+                    nums.indexOf("one") == 1 &&
+                    nums.indexOf("three") == 2 &&
+                    nums.indexOf("two") == 3
+
+                if (correct) {
+                    setTimeout(() => {
+                        onCorrectAns()
+
+                        const questionEl = querySelectorHTML("#q72")
+
+                        questionEl.remove()
+                    }, 150);
+                } else if (!correct && nums.length >= 4) {
+                    setTimeout(() => {
+                        onWrongAns()
+
+                        numEls.forEach(el => {
+                            el.classList.remove("grayscale")
+                            el.querySelector(".q72numpos")?.remove()
+                            nums.length = 0
+                        })
+                    }, 150);
+                }
+            }
+
+            numEls.forEach(el => {
+                el.addEventListener("click", onNumClick)
+            })
+        }
+    },
+    {
+        content: `<h1 style="font-size: 70px;">WHY, JUST WHY!!!</h1>`,
+        bomb: {
+            duration: 5
+        },
+        answers: [
+            {
+                text: "RIP BOZO",
+                correct: false,
+                fontSize: 55
+            },
+            {
+                text: "I DON'T KNOW",
+                correct: false,
+                fontSize: 45
+            },
+            {
+                text: "OMFG!!1",
+                correct: false,
+                fontSize: 55
+            },
+            {
+                text: "PORTUGAL",
+                correct: false,
+                fontSize: 50
+            },
+        ],
+        onQuestion() {
+            let int: number
+
+            const bg = querySelectorHTML(".bg")
+
+            bg.style.animationDuration = "10s"
+
+            int = setInterval(() => {
+                if (state.gameOver) {
+                    clearInterval(int)
+                    return
+                }
+
+                const el = create("div")
+
+                el.classList.add("q73rock")
+                el.style.scale = `${randFloat(1.0, 3.5)}`
+
+                el.style.left = `${random(0, 100)}%`
+
+                append(el)
+
+                el.addEventListener("animationend", el.remove)
+
+                playRandomAudio([
+                    "clank", "clang01", "collapse", "shotgun", "loselife",
+                    "glass"
+                ])
+            }, 150);
+
+            function handleInput(e: KeyboardEvent) {
+                if (e.key.toLowerCase() == "y") {
+                    onCorrectAns()
+                    clearInterval(int);
+
+                    qsaHTML(".q73rock").forEach(rock => rock.remove())
+
+                    document.removeEventListener("keydown", handleInput)
+                }
+            }
+
+            document.addEventListener("keydown", handleInput)
+        }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">SOMETHING FEELS <p> OUT OF PLACE...</h1>`,
+        answers: [
+            {
+                text: "HMMMM...",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "FINLAND",
+                correct: false,
+                fontSize: 55
+            },
+            {
+                text: "LEPROSY",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "DIGESTIVES",
+                correct: true,
+                fontSize: 50
+            },
+        ],
+        onQuestion() {
+            const bg = querySelectorHTML(".bg")
+
+            bg.style.animationDuration = "70s"
+
+            const copyrightbtn = querySelectorHTML(".copyrightbtn")
+
+            copyrightbtn.style.display = "block"
+            copyrightbtn.style.zIndex = "9999"
+
+            copyrightbtn.dataset.btn = ""
+            copyrightbtn.dataset.correct = "true"
+        }
+    },
+    {
+        content: `<h1 style="font-size: 70px;"></h1>`,
+        questionEl: querySelectorHTML("#q75"),
+        oneChance: true,
+        colorPalette: "allwhite",
+        async onQuestion() {
+            q75makeCopyrightBtnVisible()
+
+            await wait(800)
+
+            const attacks = ["herbert", "ufo", "pooboo"]
+            const cont = querySelectorHTML("#q75")
+            const earth = querySelectorHTML(".q75earth")
+
+            let chosenAttack = "";
+            let attackCount = 0;
+
+            function getRandomAttack() {
+                chosenAttack = attacks[random(0, attacks.length)];
+
+                attackCount++;
+
+                if (attackCount >= 4) {
+                    onCorrectAns()
+                    return;
+                }
+
+                manageAttack()
+            }
+
+            getRandomAttack()
+
+            function manageAttack() {
+                switch (chosenAttack) {
+                    case "herbert":
+                        herbertAttack()
+                        break;
+
+                    case "ufo":
+                        ufoAttack()
+                        break;
+
+                    case "pooboo":
+                        poobooAttack()
+                        break;
+                }
+            }
+
+            function poobooAttack() {
+                const pooboo = create("div")
+                let dead = false
+                let clicked = false
+
+                pooboo.classList.add("q75pooboo", "gliding")
+
+                cont.appendChild(pooboo)
+
+                pooboo.addEventListener("animationend", () => {
+                    pooboo.classList.add("stationary")
+
+                    playAudio({ id: "munch" })
+
+                    earth.classList.add("gone")
+
+                    setTimeout(() => {
+                        onWrongAns()
+                    }, 700);
+                })
+
+                pooboo.addEventListener("click", () => {
+                    if (dead || clicked) return
+                    dead = true
+                    clicked = true
+
+                    const rect = pooboo.getBoundingClientRect()
+                    pooboo.classList.remove("gliding")
+
+                    pooboo.style.left = `${rect.x}px`
+                    pooboo.style.top = `${rect.y}px`
+
+                    pooboo.classList.add("dead")
+
+                    playAudio({ id: "screechFadeOut" })
+
+                    setTimeout(() => {
+                        pooboo.remove()
+                    }, 300);
+
+                    setTimeout(() => {
+                        attacks.splice(attacks.indexOf(chosenAttack), 1)
+
+                        getRandomAttack()
+                    }, 1000);
+                })
+            }
+
+            async function ufoAttack() {
+                const ufo = create("div")
+                let dead = false
+                let clicked = false;
+
+                ufo.classList.add("q75ufo", "flying")
+
+                ufo.addEventListener("click", () => {
+                    if (clicked) return
+                    clicked = true
+
+                    const rect = ufo.getBoundingClientRect()
+
+                    ufo.classList.remove("flying")
+
+                    ufo.style.left = `${rect.x}px`
+                    ufo.style.top = `${rect.y}px`
+
+                    ufo.classList.add("dead")
+
+                    dead = true
+
+                    playAudio({ id: "fart" })
+
+                    setTimeout(() => {
+                        attacks.splice(attacks.indexOf(chosenAttack), 1)
+
+                        getRandomAttack()
+                    }, 1000);
+                })
+
+                cont.appendChild(ufo)
+
+                await wait(910)
+
+                if (dead) return
+
+                const ufoRect = ufo.getBoundingClientRect()
+                const bomb = createObjectOnPosB({
+                    pos: { x: ufoRect.x, y: ufoRect.y },
+                    selector: "div",
+                    usePercentages: false
+                })
+
+                bomb.classList.add("q75bomb")
+
+                playAudio({ id: "pop01" })
+
+                bomb.addEventListener("animationend", () => {
+                    const bombRect = bomb.getBoundingClientRect()
+
+                    createBoom({
+                        x: bombRect.x + 30,
+                        y: bombRect.y + 30,
+                        width: 200,
+                        height: 200,
+                        usePercentages: false
+                    })
+
+                    bomb.classList.add("boom")
+                    earth.classList.add("gone")
+
+                    playAudio({ id: "bigBoom" })
+
+                    setTimeout(() => {
+                        onWrongAns()
+                    }, 700);
+                })
+            }
+
+            function herbertAttack() {
+                const herbert = create("div")
+
+                let dead = false;
+                let clicked = false;
+
+                herbert.classList.add("q75herbert", "gliding")
+
+                cont.append(herbert)
+
+                const sfx = playAudio({ id: "herbertOpenMouthAngry", getObject: true })
+
+                herbert.addEventListener("click", () => {
+                    if (clicked) return
+                    clicked = true
+
+                    const rect = herbert.getBoundingClientRect()
+
+                    herbert.classList.remove("gliding")
+
+                    herbert.style.left = `${rect.x}px`
+                    herbert.style.top = `${rect.y}px`
+
+                    herbert.classList.add("dead")
+
+                    sfx?.pause()
+
+                    playAudio({ id: "fart" })
+                    playAudio({ id: "herbertDie" })
+
+                    dead = true
+
+                    setTimeout(() => {
+                        attacks.splice(attacks.indexOf(chosenAttack), 1)
+
+                        getRandomAttack()
+                    }, 1000);
+                })
+
+                herbert.addEventListener("animationend", () => {
+                    if (dead) return
+
+                    playAudio({ id: "munch" })
+
+                    earth.classList.add("gone")
+
+                    herbert.classList.add("mouthclosed")
+
+                    setTimeout(() => {
+                        onWrongAns()
+                    }, 500);
+                })
+            }
+        }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">WHAT FOOD <p> MAKES YOU SCREAM?</h1>`,
+        answers: [
+            {
+                text: "CHICKEN FINGERS",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "ICE CREAM",
+                correct: true,
+                fontSize: 50
+            },
+            {
+                text: "FRIED RATTLESNAKE",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "SWISS CHEESE",
+                correct: false,
+                fontSize: 40
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 100px;">66 + 3 = ?</h1>`,
+        answers: [
+            {
+                text: "?",
+                correct: true,
+                fontSize: 70
+            },
+            {
+                text: "LOL 69!",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "42069",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "HOLD ON. LEMME ASK CHATGPT.",
+                correct: false,
+                fontSize: 35
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">WHAT DID YOU <p> DO LAST CHRISTMAS?</h1>`,
+        answers: [
+            {
+                text: "I PISSED ON MY COUSIN'S PRESENT",
+                correct: false,
+                fontSize: 35
+            },
+            {
+                text: "I KILLED 4 ELDERLY MEN",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "NOTHING. I'M A FAILURE WITH NO FRIENDS.",
+                correct: false,
+                fontSize: 25
+            },
+            {
+                text: "UH, I GAVE YOU MY HEART?",
+                correct: true,
+                fontSize: 35
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 50px;"></h1>`,
+        onQuestion() { }
+    }
 ]

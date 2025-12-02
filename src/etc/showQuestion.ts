@@ -33,6 +33,7 @@ export type Question = {
     colorPalette?: ColorPalette,
     bomb?: BombOptions,
     oneChance?: boolean,
+    hideQuestionRing?: boolean
 }
 
 export function setColorPalette(palette: ColorPalette) {
@@ -54,9 +55,9 @@ export function setColorPalette(palette: ColorPalette) {
             break;
 
         case "darkpurple":
-            qring.style.filter = "hue-rotate(270deg) saturate(3) brightness(0.6)"
-            qtext.style.filter = "hue-rotate(270deg) saturate(3) brightness(0.6)";
-            bottomrow.style.filter = "hue-rotate(270deg) saturate(3) brightness(0.6)";
+            qring.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)"
+            qtext.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)";
+            bottomrow.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)";
             break;
     }
 }
@@ -137,6 +138,11 @@ export async function showQuestion(questionNumber: number) {
         clearBombInterval()
     }
 
+    if (prevQst && prevQst.hideQuestionRing) {
+        const qring = querySelectorHTML(".qring")
+        qring.style.display = "flex"
+    }
+
     const questionText = create("h1")
     const questionArea = querySelectorHTML(".questionarea")
     const btns = qsaHTML(".qbutton.game")
@@ -168,6 +174,11 @@ export async function showQuestion(questionNumber: number) {
         qst.questionEl.style.display = qst.questionElDisplay || "block"
     }
 
+    if (qst.hideQuestionRing) {
+        const qring = querySelectorHTML(".qring")
+        qring.style.display = "none"
+    }
+
     btns.forEach((btn, i) => {
         if (qst.answers) {
             btn.style.display = "grid"
@@ -176,7 +187,7 @@ export async function showQuestion(questionNumber: number) {
             btn.style.fontSize = `${qst.answers[i].fontSize}px`;
             btn.dataset.correct = `${qst.answers[i].correct}`
 
-            /* i dont now why it sometimes does the slide appear anim. so just keep this */
+            /* i dont know why it sometimes does the slide appear anim. so just keep this */
             btn.classList.remove("animate")
         } else {
             btn.style.display = "none"

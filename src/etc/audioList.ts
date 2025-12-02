@@ -218,4 +218,34 @@ export const audioList: AudioObject[] = [
         id: "pop02",
         bus: "sfx"
     },
+    {
+        src: "/audio/herbert/openMouth_angry.mp3",
+        volume: state.volume.sfx,
+        id: "herbertOpenMouthAngry",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/herbert/die.mp3",
+        volume: state.volume.sfx,
+        id: "herbertDie",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/bigBoom.mp3",
+        volume: state.volume.sfx,
+        id: "bigBoom",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/screech.mp3",
+        volume: state.volume.sfx,
+        id: "screech",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/screechFadeOut.mp3",
+        volume: state.volume.sfx,
+        id: "screechFadeOut",
+        bus: "sfx"
+    },
 ]

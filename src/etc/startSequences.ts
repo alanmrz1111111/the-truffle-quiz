@@ -20,7 +20,7 @@ export async function seq1() {
 
         const boomEffect = createObjectOnPos("img", alienPos) as HTMLImageElement
 
-        boomEffect.src = "/imgs/boom.png"
+        boomEffect.src = "/imgs/boom02.png"
         boomEffect.classList.add("alienboom")
         boomEffect.draggable = false;
 
@@ -203,8 +203,8 @@ export async function seq5() {
         }, 300);
 
         createBoom({
-            x: pos.x + 50,
-            y: pos.y + 30,
+            x: pos.x + 100,
+            y: pos.y + 50,
             width: 150,
             height: 150,
             usePercentages: false

@@ -1,9 +1,8 @@
-import { getCurrentWindow } from "@tauri-apps/api/window";
+// import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Checkbox } from "./components/Checkbox";
 import { changeMusicVolume, changeSFXVolume, getAudioDuration, playAudio, playLoopingAudio, registerAudioList } from "./core/audio";
 import { closeCurrentPopup, popup } from "./core/popup";
 import { MUSIC_VOLUME, SFX_VOLUME, state } from "./core/state";
-import { transition } from "./core/transition";
 import { audioList } from "./etc/audioList";
 import { flyingImage } from "./etc/flyingImage";
 import { mqmessages } from "./etc/marqueeMessages";
@@ -22,7 +21,8 @@ customElements.define("c-checkbox", Checkbox)
 
 trackFPS()
 
-const tauriWindow = getCurrentWindow()
+// const tauriWindow = getCurrentWindow()
+const mousePos = { x: 0, y: 0 }
 
 export const buttons = {
     begin: querySelectorHTML(".beginbtn#main")
@@ -32,15 +32,32 @@ const checkboxes = qsaHTML(".checkbox")
 
 document.addEventListener("contextmenu", (e) => e.preventDefault())
 
+document.addEventListener("mousemove", (e) => {
+    mousePos.x = e.pageX
+    mousePos.y = e.pageY
+})
+
 document.addEventListener("keydown", (e) => {
+    if (!state.devMode) return
+
     if (e.ctrlKey && e.altKey) {
         onWrongAns()
     }
 
-    if (e.altKey && e.key == "a") onCorrectAns()
+    if (e.ctrlKey && e.key == "a") onCorrectAns()
 
     if (e.key == "q") {
         playAudio({ id: "woohoo" })
+    }
+
+    if (e.ctrlKey && e.key == "b") {
+        createBoom({
+            x: mousePos.x,
+            y: mousePos.y,
+            width: 300,
+            height: 200,
+            usePercentages: false
+        })
     }
 })
 
@@ -236,7 +253,7 @@ function onStats() {
         },
         bodyContent: `
             <div class="statspage">
-                <h1>DEATHS: ${localStorage.getItem("deathCount")}</h1>
+                <h1>todo</h1>
             </div>
         `,
         buttons: [
@@ -308,7 +325,7 @@ export function setBackgroundType(type: BGType) {
     }
 }
 
-function setMainMenuVisibilityState(visible: boolean) {
+export function setMainMenuVisibilityState(visible: boolean) {
     const menugrid = querySelectorHTML(".menugrid")
     const logo = querySelectorHTML(".logo")
     const marquee = querySelectorHTML(".marquee")
@@ -401,6 +418,7 @@ function init() {
         startPage.style.display = "none"
 
         reloadQuiz()
+        if (!state.devMode) playAudio({ id: "woohoo" })
     }
 
     if (localStorage.getItem("menuOnReload") == "true") {
@@ -447,7 +465,7 @@ function confirmExitAction() {
             {
                 text: "yep",
                 onClick() {
-                    tauriWindow.close()
+                    // tauriWindow.close()
                 },
             },
             {
@@ -521,7 +539,7 @@ export function onWrongAns() {
     updateLivesLabel()
     setLivesLabelColor()
     loseLifeEffect()
-    loseLifeSFX()
+    playAudio({ id: "loselife" })
     // shakeScreen()
 
     if (state.lives <= 0 || state.danger == true) {
@@ -573,12 +591,23 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
     pauseMusic()
 
     for (let i = 0; i < 3; i++) {
+        let x = 50
+        let y = 50
+
+        if (i == 1) {
+            x = 25
+            y = 25
+        } else if (i == 2) {
+            x = 75
+            y = 75
+        }
+
         createBoom({
-            x: random(50, 90),
-            y: random(30, 80),
-            width: 300,
-            height: 200,
-            usePercentages: true
+            x,
+            y,
+            width: 600,
+            height: 400,
+            usePercentages: true,
         })
     }
 
@@ -629,10 +658,6 @@ function pauseMusic() {
     gameAudioObj?.pause()
 }
 
-function loseLifeSFX() {
-    playAudio({ id: "loselife" })
-}
-
 function loseLifeEffect() {
     const lives = querySelectorHTML(".lives")
     const rect = lives.getBoundingClientRect()
@@ -677,7 +702,7 @@ async function beginStartSequence() {
     buttons.begin.textContent = "uh oh.."
     buttons.begin.classList.add("dead")
 
-    const rand = random(1, 6)
+    const rand = random(1, 5)
 
     switch (rand) {
         case 1:

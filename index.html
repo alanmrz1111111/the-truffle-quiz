@@ -15,7 +15,7 @@
     <div class="transitionoverlay"></div>
     <div class="creditsoverlay">
         <h1 style="margin-bottom: 5px; font-size: 45px; color: #ff784f; text-shadow: 0 0 20px #ff784f8c;">THE TRUFFLE
-            QUIZ 1.0.0 (2025)</h1>
+            QUIZ (2025)</h1>
 
         <h2 style="margin-top: 30px;"><span class="highlight">CREATED BY:</span> ONE</h2>
         <h2><span class="highlight">INSPIRED BY: </span>THE IMPOSSIBLE QUIZ <span class="highlight">-</span>
@@ -103,7 +103,7 @@
         <img src="/imgs/gameover.png" alt="game over" class="gameoverimg">
 
         <div class="row" style="gap: 35px; display: none;" id="gameoverbuttonsrow">
-            <button class="gameoverbutton" data-btn="tryagain">TRY AGAIN</button>
+            <button class="gameoverbutton" data-btn="tryagain">TRY AGAIN!</button>
             <button class="gameoverbutton" data-btn="backtomenu">give up...</button>
         </div>
     </div>
@@ -237,22 +237,31 @@
                 Q66. What happened? <p></p>
                 1. You installed MS-DOS. <p></p>
                 2. This is 1981. <p></p>
-                3. Insert boot disk in A: <p></p>
+                3. ntoskrnl.exe <p></p>
                 4. npm run tauri dev. <p></p>
+                LIVES: <span id="q66liveslabel">3</span>
+                <p></p>
+
                 &nbsp; <p></p>
                 <div class="row" style="justify-content: start; gap: 5px;">
-                    Enter your choice (1-4): <span class="q66inputlabel"></span> <div class="q66cursor"></div>
+                    Enter your choice (1-4): <span class="q66inputlabel"></span>
+                    <div class="q66cursor"></div>
                 </div>
             </div>
         </div>
 
-        <div class="demoendoverlay hidden">
-            <h1 style="color: #ff8640; font-size: 100px; margin: 0;">OVER!</h1>
-            <h3 style="color: white; margin: 0; font-size: 30px;">THATS IT FOR NOW. STAY TUNED FOR THE FULL VERSION!!
-            </h3>
+        <div id="q72">
+            <div class="row" style="gap: 10px;">
+                <div class="q72num one" data-q72-num="one">1</div>
+                <div class="q72num two" data-q72-num="two">2</div>
+                <div class="q72num three" data-q72-num="three">3</div>
+                <div class="q72num four" data-q72-num="four">4</div>
+            </div>
+        </div>
 
-            <button class="qbutton" style="margin-top: 15px; font-size: 45px;" data-btn="backtomenu">BACK TO
-                MENU.</button>
+        <div id="q75">
+            <div class="q75bg"></div>
+            <div class="q75earth"></div>
         </div>
 
         <div class="questionarea"></div>

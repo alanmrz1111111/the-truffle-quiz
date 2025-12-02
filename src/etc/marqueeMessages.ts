@@ -9,5 +9,6 @@ export const mqmessages = [
     "MORE TO COME!",
     "[object Promise]",
     "THIS GAME IS FOR FEEBLE-MINDED FOOLS!",
-    "9.8/10 on IMDB!"
+    "9.8/10 on IMDB!",
+    "if (answer == 'truffle') onCorrectAns()"
 ]

@@ -9,7 +9,7 @@ export const state = {
         music: MUSIC_VOLUME
     },
     inMainMenu: false, 
-    questionNumber: questions.length - 32,
+    questionNumber: questions.length,
     currentBombTimer: 0,
     currentBombInterval: 0,
     lives: 3,

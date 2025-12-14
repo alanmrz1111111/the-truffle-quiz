@@ -1,8 +1,11 @@
 import { playAudio, playRandomAudio } from "../core/audio";
+import { lines } from "../core/characterLines";
+import { particles } from "../core/particles";
 import { state } from "../core/state";
-import { getGameBGMAudioObject, hideBackground, onCorrectAns, onWrongAns, showBackground } from "../main";
-import { aabb, append, create, createBoom, createObjectOnPosB, q75makeCopyrightBtnVisible, qsaHTML, querySelectorHTML, randFloat, random, setCursorVisibilityState, setImgDimensions, setQuestionAreaPointerEventState, showObjectWithBounce, wait } from "../utils";
-import { Question } from "./showQuestion";
+import { getGameBGMAudioObject, hideBackground, manageFinaleBGM, manageGameFinale, mousePos, onCorrectAns, onWrongAns, showBackground } from "../main";
+import { getCarrot } from "../powerups";
+import { aabb, append, appendToCont, create, createBoom, createObjectOnPos, createObjectOnPosB, q69giveCarrot, q75makeCopyrightBtnVisible, qsaHTML, querySelectorHTML, randFloat, random, setCursorVisibilityState, setImgDimensions, setQuestionAreaPointerEventState, showObjectWithBounce, wait } from "../utils";
+import { clearBombInterval, Question } from "./showQuestion";
 
 export const questions: Question[] = [
     {
@@ -68,7 +71,7 @@ export const questions: Question[] = [
             {
                 text: "that's animal abuse!",
                 correct: false,
-                fontSize: 30
+                fontSize: 40
             },
             {
                 text: "Shoot him",
@@ -97,6 +100,20 @@ export const questions: Question[] = [
             const img = querySelectorHTML(".q3herbert")
             const label = querySelectorHTML(".q3label")
 
+            function giveCarrot() {
+                getCarrot({
+                    position: {
+                        x: window.innerWidth / 2,
+                        y: window.innerHeight / 2
+                    },
+                    slot: 1
+                })
+
+                img.removeEventListener("click", giveCarrot)
+            }
+
+            img.addEventListener("click", giveCarrot)
+
             async function key(e: KeyboardEvent) {
                 let ignore = false
                 const targetWord = ["h", "e", "l", "l", "o"]
@@ -124,6 +141,7 @@ export const questions: Question[] = [
                     onCorrectAns()
 
                     document.removeEventListener("keydown", key)
+                    img.removeEventListener("click", giveCarrot)
                 }
             }
 
@@ -551,7 +569,7 @@ export const questions: Question[] = [
             }
             let speed = 3
             let canLoseLife = true
-            let timer = 10;
+            let timer = 5;
 
             function keydown(e: KeyboardEvent) {
                 if (e.key === "Shift") keyMap.shift = true
@@ -619,7 +637,7 @@ export const questions: Question[] = [
                 append(girl)
 
                 girl.addEventListener("animationend", girl.remove)
-            }, 1500)
+            }, 450)
 
             const int4 = setInterval(() => {
                 const herbertRect = herbert.getBoundingClientRect()
@@ -712,7 +730,7 @@ export const questions: Question[] = [
         colorPalette: "allwhite",
         onQuestion() {
             let canLoseLife = true
-            let timer = 10;
+            let timer = 5;
 
             async function handleLoseLife() {
                 if (!canLoseLife) return;
@@ -758,7 +776,7 @@ export const questions: Question[] = [
                 rock.style.top = `${random(5, 90)}%`
 
                 if (willScale) {
-                    rock.style.scale = `${randFloat(1.3, 2.2)}`
+                    rock.style.scale = `${randFloat(1.3, 3.1)}`
                 }
 
                 append(rock)
@@ -1061,7 +1079,7 @@ export const questions: Question[] = [
         ],
         onQuestion() {
             const something = createObjectOnPosB({
-                pos: { x: 70, y: 83 },
+                pos: { x: 50, y: 90 },
                 usePercentages: true,
                 selector: "h1"
             })
@@ -1462,7 +1480,7 @@ export const questions: Question[] = [
                     if (
                         mouthOpen &&
                         rect.left <= herbertRect.right &&
-                        rect.left >= herbertRect.right - 60 &&
+                        rect.left >= herbertRect.right - 80 &&
                         rect.top < herbertRect.bottom
                     ) {
                         objs.splice(i, 1)
@@ -1581,7 +1599,7 @@ export const questions: Question[] = [
             const questionarea = querySelectorHTML(".questionarea")
             const truffles = [
                 {
-                    pos: { x: 80, y: 10 },
+                    pos: { x: 80, y: 12 },
                 },
                 {
                     pos: { x: 15, y: 65 },
@@ -1595,6 +1613,32 @@ export const questions: Question[] = [
 
             let count = 0;
             let goal = 3;
+
+            const carrot = createObjectOnPosB({
+                pos: {
+                    x: 50,
+                    y: 50
+                },
+                usePercentages: true,
+                selector: "img",
+                translate: true
+            })
+
+            carrot.classList.add("q44carrot")
+            carrot.addEventListener("click", giveCarrot)
+
+            function giveCarrot() {
+                getCarrot({
+                    position: {
+                        x: window.innerWidth / 2,
+                        y: window.innerHeight / 2
+                    },
+                    slot: 2
+                })
+
+                carrot.removeEventListener("click", giveCarrot)
+                carrot.remove()
+            }
 
             truffles.forEach(truffle => {
                 const obj = createObjectOnPosB({
@@ -1624,6 +1668,9 @@ export const questions: Question[] = [
                         setTimeout(() => {
                             onCorrectAns()
                             els.forEach(el => el.remove())
+
+                            carrot.removeEventListener("click", giveCarrot)
+                            carrot.remove()
                         }, 5000);
                     }
                 })
@@ -1726,8 +1773,8 @@ export const questions: Question[] = [
                     size: { w: 800, h: 450 }
                 },
                 {
-                    pos: { x: 80, y: 58 },
-                    size: { w: 800, h: 100 }
+                    pos: { x: 75, y: 55 },
+                    size: { w: 850, h: 250 }
                 },
                 {
                     pos: { x: 102, y: 0 },
@@ -2808,7 +2855,6 @@ export const questions: Question[] = [
                         onCorrectAns()
 
                         document.removeEventListener("keydown", onInput)
-
                     } else {
                         onWrongAns()
                         livesLabel.textContent = `${state.lives}`
@@ -2913,7 +2959,12 @@ export const questions: Question[] = [
                 fontSize: 60
             },
         ],
-        onQuestion() { },
+        onQuestion() {
+            const qring = querySelectorHTML(".qring")
+
+            qring.classList.add("grabby")
+            qring.addEventListener("click", q69giveCarrot)
+        },
     },
     {
         content: `<h1 style="font-size: 50px;">WHAT DOES 'PPAP' STAND FOR?</h1>`,
@@ -2939,7 +2990,12 @@ export const questions: Question[] = [
                 fontSize: 35
             },
         ],
-        onQuestion() { }
+        onQuestion() {
+            const qring = querySelectorHTML(".qring")
+
+            qring.classList.remove("grabby")
+            qring.removeEventListener("click", q69giveCarrot)
+        }
     },
     {
         content: `<h1 style="font-size: 50px;">WHAT IS THE HIGHEST <p> RATED SHOW ON IMDB?</h1>`,
@@ -3473,7 +3529,1162 @@ export const questions: Question[] = [
         onQuestion() { }
     },
     {
-        content: `<h1 style="font-size: 50px;"></h1>`,
+        content: `<h1 style="font-size: 50px;">WHAT DO YOU CALL <p>A MAN WITH NO FRIENDS?</h1>`,
+        answers: [
+            {
+                text: "A LOSER",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "AN INCEL",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "THE TRUFFLE QUIZ PLAYER",
+                correct: true,
+                fontSize: 40
+            },
+            {
+                text: "ARMPIT SNIFFER",
+                correct: false,
+                fontSize: 40
+            },
+        ],
         onQuestion() { }
-    }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">WHAT IS A BANANA <p> TAPED TO A WALL?</h1>`,
+        answers: [
+            {
+                text: "MODERN ART",
+                correct: true,
+                fontSize: 48
+            },
+            {
+                text: "A TRAP FOR MONKEYS",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "A RIGHT MESS!",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "PROFANITY",
+                correct: false,
+                fontSize: 50
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 50px;"></h1>`,
+        bomb: {
+            delay: 2000,
+            duration: 10
+        },
+        questionEl: querySelectorHTML("#q81"),
+        colorPalette: "darkpurple",
+        onQuestion() {
+            const herbert = querySelectorHTML(".q81herbert")
+            const speechBubble = querySelectorHTML(".q81speechbubble")
+            const inputLabel = querySelectorHTML(".q81inputlabel")
+
+            let input = ""
+            let selectedObj = ""
+            let inputEnabled = false
+
+            const objs = ["apple", "star", "flower", "house", "heart"]
+
+            playAudio({ id: "crazy02" })
+
+            herbert.addEventListener("animationend", onHerbertAnimEnd)
+            document.addEventListener("keydown", onInput)
+
+            async function onInput(e: KeyboardEvent) {
+                if (e.ctrlKey || e.altKey || e.shiftKey || e.key == "Enter" || !inputEnabled) return
+
+                if (e.key == "Backspace") {
+                    input = input.slice(0, -1)
+                } else {
+                    input += e.key.toUpperCase()
+                }
+
+                if (input.length <= 9) inputLabel.textContent = input;
+
+                if (input.toLowerCase() == selectedObj) {
+                    playAudio({ id: "ding2" })
+                    setTimeout(() => {
+                        input = ""
+                        inputLabel.textContent = input
+
+                        spawnObject()
+                    }, 100);
+                }
+            }
+
+            function onHerbertAnimEnd() {
+                speechBubble.classList.add("active")
+
+                playAudio({ id: "blow" })
+
+                setTimeout(() => {
+                    inputEnabled = true
+                    spawnObject()
+                }, 200);
+            }
+
+            async function endCutscene() {
+                clearBombInterval()
+
+                const label = create("h2")
+                label.textContent = lines.herbert.q81_01
+
+                speechBubble.appendChild(label)
+                label.classList.add("q81dialoglabel")
+
+                herbert.classList.add("blushing")
+
+                querySelectorHTML("#q81").querySelector(".q81object")?.remove()
+
+                playAudio({ id: "blow" })
+
+                inputEnabled = false
+
+                await wait(200)
+
+                playAudio({ id: "woosh" })
+                playAudio({ id: "woohoo" })
+
+                herbert.classList.add("happy")
+
+                let int = setInterval(() => {
+                    const heart = createObjectOnPosB({
+                        pos: { x: random(25, 35), y: 43 },
+                        selector: "div",
+                        usePercentages: true
+                    })
+
+                    heart.classList.add("q81heart")
+                    heart.addEventListener("animationend", heart.remove)
+
+                    heart.style.animationDuration = `${randFloat(0.5, 1.0)}s`
+                    heart.style.scale = `${randFloat(0.5, 1.2)}`
+                }, 150);
+
+                await wait(3500)
+
+                clearInterval(int)
+                onCorrectAns()
+            }
+
+            function spawnObject() {
+                if (objs.length <= 0) {
+                    endCutscene()
+                    return;
+                }
+
+                selectedObj = objs[random(0, objs.length)]
+
+                objs.splice(objs.indexOf(selectedObj), 1)
+                console.log(objs)
+
+                querySelectorHTML("#q81").querySelector(".q81object")?.remove()
+
+                const objEl = create("div")
+
+                objEl.classList.add("q81object", selectedObj)
+                querySelectorHTML("#q81").appendChild(objEl)
+
+                /* objContainer.classList.forEach(cls => {
+                    objContainer.classList.remove(cls);
+                });
+
+                objContainer.classList.add("q81object", selectedObj) */
+            }
+        }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">HOW DO YOU REPRESENT <p> 82 IN ROMAN NUMERALS?</h1>`,
+        bomb: {
+            duration: 10
+        },
+        answers: [
+            {
+                text: "LXXXII",
+                correct: true,
+                fontSize: 60
+            },
+            {
+                text: "LXXXIII",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "LXXIII",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "DXXIII",
+                correct: false,
+                fontSize: 60
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 40px;">CAN YOU PLEASE TELL ME WHAT <p> QUESTION NUMBER ARE WE IN?</h1>`,
+        answers: [
+            {
+                text: "82",
+                correct: false,
+                fontSize: 70
+            },
+            {
+                text: "83",
+                correct: true,
+                fontSize: 70
+            },
+            {
+                text: "84",
+                correct: false,
+                fontSize: 70
+            },
+            {
+                text: "85",
+                correct: false,
+                fontSize: 70
+            },
+        ],
+        onQuestion() {
+            setTimeout(() => {
+                const qnumber = querySelectorHTML(".qnumber")
+
+                qnumber.textContent = ":("
+            }, 1);
+        }
+    },
+    {
+        content: `<h1 style="font-size: 80px;">ONE UP.</h1>`,
+        answers: [
+            {
+                text: "AIGHT.",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "WHAT DO YOU MEAN?",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "SQUIRCLE",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "FOUR?",
+                correct: false,
+                fontSize: 70
+            },
+        ],
+        onQuestion() {
+            function onFour(e: KeyboardEvent) {
+                if (e.key.toLowerCase() == "4") {
+                    document.removeEventListener("keydown", onFour)
+                    onCorrectAns()
+                }
+            }
+
+            document.addEventListener("keydown", onFour)
+        }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">CLICK THE <p> CORRECT STATEMENT.</h1>`,
+        answers: [
+            {
+                text: "PS5 > SWITCH 2",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "PS5 < SWITCH 2",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "PS5 = SWITCH 2",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "FISH < 17",
+                correct: true,
+                fontSize: 60
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 50px;"></h1>`,
+        questionEl: querySelectorHTML("#q86"),
+        bomb: {
+            duration: 10
+        },
+        colorPalette: "allwhite",
+        onQuestion() {
+            const sword = querySelectorHTML(".q86sword")
+            const trigger = querySelectorHTML(".q86trigger")
+
+            let particleY = 300
+
+            setQuestionAreaPointerEventState("none")
+
+            function pushSwordUpwards() {
+                const currentTop = parseFloat(sword.style.top) || sword.offsetTop;
+                sword.style.top = `${(currentTop - 1.5)}px`;
+
+                particleY -= 1.5
+
+                checkSwordToTriggerCollision()
+
+                playRandomAudio([
+                    "clank", "clang01"
+                ])
+
+                particles({
+                    pos: { x: random(400, 450), y: particleY },
+                    count: 5,
+                    size: { width: 8, height: 8 },
+                    color: "rgba(119, 119, 119, 0.55)",
+                    gravity: 1,
+                    velocity: { min: 1, max: 3 },
+                    duration: 500
+                });
+            }
+
+            function checkSwordToTriggerCollision() {
+                const margin = 15;
+
+                const swordRect = sword.getBoundingClientRect()
+                const triggerRect = trigger.getBoundingClientRect()
+
+                if (aabb(swordRect, triggerRect, margin)) {
+                    endCutscene()
+                }
+            }
+
+            function endCutscene() {
+                sword.style.pointerEvents = "none"
+                sword.classList.add("active")
+
+                clearBombInterval()
+
+                playAudio({ id: "ahh" })
+
+                sword.addEventListener("animationend", () => {
+                    onCorrectAns()
+                    sword.remove()
+                })
+            }
+
+            sword.addEventListener("click", pushSwordUpwards);
+        }
+    },
+    {
+        content: `<h1 style="font-size: 70px;">*BITES YOU*</h1>`,
+        answers: [
+            {
+                text: "OWIE.",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "WAS THAT THE BITE OF 87??",
+                correct: true,
+                fontSize: 40
+            },
+            {
+                text: "*PISSES ON YOUR MOUTH AS REVENGE*",
+                correct: false,
+                fontSize: 30
+            },
+            {
+                text: "KINKY MOTHERFUCKER",
+                correct: false,
+                fontSize: 40
+            },
+        ],
+        onQuestion() {
+            setQuestionAreaPointerEventState("all")
+        }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">MY WIFE TOLD ME TO PUT <p> KETCHUP ON THE SHOPPING LIST.</h1>`,
+        answers: [
+            {
+                text: "NOW I CAN'T READ IT.",
+                correct: true,
+                fontSize: 40
+            },
+            {
+                text: "OKAY?",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "AND THEN SHE TOLD ME TO PUT OLIVES.",
+                correct: false,
+                fontSize: 30
+            },
+            {
+                text: "LOL!!!",
+                correct: false,
+                fontSize: 60
+            },
+        ],
+        onQuestion() {
+            setQuestionAreaPointerEventState("all")
+        }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">OH NO... QUESTION 89! <p> IT'S TIME FOR...</h1>`,
+        answers: [
+            {
+                text: "FOR WHAT?",
+                correct: false,
+                fontSize: 50
+            },
+            {
+                text: "FLAN",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "TRUFFLE'S IMPOSSIBLE 10!",
+                correct: true,
+                fontSize: 40
+            },
+            {
+                text: "IT'S TIME TO TAKE A BREAK.",
+                correct: false,
+                fontSize: 30
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 50px;">IN WHAT YEAR DID THE <p> GREAT SCHISM HAPPEN?</h1>`,
+        bomb: {
+            duration: 10
+        },
+        answers: [
+            {
+                text: "1056",
+                correct: false,
+                fontSize: 70
+            },
+            {
+                text: "1057",
+                correct: false,
+                fontSize: 70
+            },
+            {
+                text: "1054",
+                correct: true,
+                fontSize: 70
+            },
+            {
+                text: "1517",
+                correct: false,
+                fontSize: 70
+            },
+        ],
+        onQuestion() {
+            manageGameFinale()
+        }
+    },
+    {
+        content: `<h1 style="font-size: 60px;">
+                    <span style="font-size: 45px; margin: 0;">WHAT IS THE NEXT NUMBER?</span> <p>
+                    1, 1, 2, 3, 5, ?
+                  </h1>`,
+        bomb: {
+            duration: 10
+        },
+        answers: [
+            {
+                text: "EIGHT!",
+                correct: true,
+                fontSize: 60
+            },
+            {
+                text: "SEVEN!",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "SIX!",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "NINE!",
+                correct: false,
+                fontSize: 60
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 60px;">WHAT DOES <p> 'KAFKAESQUE' MEAN?</h1>`,
+        bomb: {
+            duration: 10
+        },
+        answers: [
+            {
+                text: "SOMETHING WEIRD, ECCENTRIC",
+                correct: false,
+                fontSize: 30
+            },
+            {
+                text: "ANNOYINGLY NONSENSICAL",
+                correct: false,
+                fontSize: 38
+            },
+            {
+                text: "FANCY WORD FOR 'BREASTS'",
+                correct: false,
+                fontSize: 35
+            },
+            {
+                text: "NIGHTMARISHLY COMPLEX",
+                correct: true,
+                fontSize: 35
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 70px;">DEMON COUNT!</h1>`,
+        questionEl: querySelectorHTML("#q93"),
+        moveText: {
+            duration: 0.5,
+            easing: "linear",
+            delay: 2000
+        },
+        bomb: {
+            delay: 3000,
+            duration: 6
+        },
+        oneChance: true,
+        async onQuestion() {
+            await wait(1800)
+
+            setQuestionAreaPointerEventState("none")
+            let demonCount = random(4, 8)
+
+            const nums = [4, 5, 6, 7, 8]
+            nums.splice(nums.indexOf(demonCount), 1)
+
+            const answerBtns = qsaHTML(".q93answer")
+            const correctAnswerBtnIndex = random(0, answerBtns.length)
+
+            answerBtns[correctAnswerBtnIndex].dataset.correct = "true"
+            answerBtns[correctAnswerBtnIndex].textContent = `${demonCount}`
+
+            answerBtns.forEach(btn => {
+                if (btn.dataset.correct == "true") return
+
+                btn.dataset.correct = "false"
+
+                const rand = nums[random(0, nums.length)]
+                nums.splice(nums.indexOf(rand), 1)
+
+                btn.textContent = `${rand}`
+            })
+
+            function showPossibleAnswers() {
+                showObjectWithBounce({
+                    el: querySelectorHTML(".q93row"),
+                    display: "flex",
+                    duration: 0.5,
+                    easing: "ease"
+                })
+            }
+
+            async function createDemon() {
+                const el = create("div")
+                el.classList.add("q93demon")
+                el.style.scale = `${randFloat(0.5, 1.2)}`
+                el.style.animationDuration = `${randFloat(1.5, 2.5)}s`
+                el.style.top = `${random(35, 75)}%`
+
+                appendToCont(el)
+
+                await wait(2800)
+
+                el.remove()
+            }
+
+            for (let i = 0; i < demonCount; i++) {
+                createDemon()
+            }
+
+            await wait(2500)
+
+            showPossibleAnswers()
+        }
+    },
+    {
+        content: `<h1 style="font-size: 42px;">HOW IS THE 9TH CIRCLE OF HELL <p> DESCRIBED IN DANTE'S 'INFERNO'?</h1>`,
+        bomb: {
+            duration: 15,
+        },
+        answers: [
+            {
+                text: "FULL OF SHIT!",
+                correct: false,
+                fontSize: 42
+            },
+            {
+                text: "SURPRISINGLY TRANQUIL",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "A VAST, FROZEN LAKE CALLED COCYTUS.",
+                correct: true,
+                fontSize: 30
+            },
+            {
+                text: "A VAST LAKE OF FIRE AND SUFFERING.",
+                correct: true,
+                fontSize: 30
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 42px;"></h1>`,
+        questionEl: querySelectorHTML("#q95"),
+        bomb: {
+            duration: 15
+        },
+        oneChance: true,
+        onQuestion() {
+            const player = querySelectorHTML(".q95player");
+
+            const initialPlayerRect = player.getBoundingClientRect();
+            const pos = { x: initialPlayerRect.left, y: initialPlayerRect.top };
+            const keys = { up: false, down: false, left: false, right: false };
+
+            const coin1 = querySelectorHTML(".q95coin.firstcoin")
+            const coin2 = querySelectorHTML(".q95coin.secondcoin")
+
+            document.body.style.cursor = "none"
+
+            let canLoseLife = true
+            let hasPlayedCollectCoinOneSfx = false
+            let hasPlayedCollectCoinTwoSfx = false
+            let hasCalledNextQuestionFunc = false
+
+            const obstacles = [
+                {
+                    x: 0,
+                    y: 60,
+                    size: { w: 300, h: 300 }
+                },
+                {
+                    x: 0,
+                    y: -10,
+                    size: { w: 200, h: 300 }
+                },
+                {
+                    x: 30,
+                    y: 30,
+                    size: { w: 150, h: 450 }
+                },
+                {
+                    x: 23.5,
+                    y: -15,
+                    size: { w: 700, h: 215 },
+                },
+                {
+                    x: 95,
+                    y: 0,
+                    size: { w: 80, h: 800 },
+                },
+                {
+                    x: 47.6,
+                    y: 95,
+                    size: { w: 405, h: 100 },
+                },
+                {
+                    x: 77,
+                    y: 35,
+                    size: { w: 100, h: 120 },
+                    moveBehaviour: "ltr",
+                },
+                {
+                    x: 55,
+                    y: 55,
+                    size: { w: 100, h: 120 },
+                    moveBehaviour: "rtl",
+                },
+            ]
+
+            const obstacleEls: HTMLElement[] = []
+
+            let rafId: number
+
+            let velX = 0;
+            let velY = 0;
+
+            const accel = 1;
+            const maxSpeed = 8;
+            const friction = 0.1;
+
+            obstacles.forEach(obs => {
+                const el = create("div")
+                el.classList.add("q95obstacle")
+
+                el.style.width = `${obs.size.w}px`
+                el.style.height = `${obs.size.h}px`
+
+                if (obs.moveBehaviour) {
+                    el.classList.add(obs.moveBehaviour)
+                }
+
+                el.style.top = `${obs.y}%`
+                el.style.left = `${obs.x}%`
+
+                appendToCont(el)
+
+                obstacleEls.push(el)
+            })
+
+            function onKeyPress(e: KeyboardEvent) {
+                if (e.key === "ArrowUp") keys.up = true;
+                if (e.key === "ArrowDown") keys.down = true;
+                if (e.key === "ArrowLeft") keys.left = true;
+                if (e.key === "ArrowRight") keys.right = true;
+            }
+
+            function onKeyUp(e: KeyboardEvent) {
+                if (e.key === "ArrowUp") keys.up = false;
+                if (e.key === "ArrowDown") keys.down = false;
+                if (e.key === "ArrowLeft") keys.left = false;
+                if (e.key === "ArrowRight") keys.right = false;
+            }
+
+            document.addEventListener("keydown", onKeyPress);
+            document.addEventListener("keyup", onKeyUp);
+
+            function update() {
+                rafId = requestAnimationFrame(update);
+
+                if (keys.up) velY -= accel;
+                if (keys.down) velY += accel;
+                if (keys.left) velX -= accel;
+                if (keys.right) velX += accel;
+
+                if (!keys.up && !keys.down) {
+                    velY *= (1 - friction);
+                }
+                if (!keys.left && !keys.right) {
+                    velX *= (1 - friction);
+                }
+
+                if (keys.left) {
+                    player.style.scale = "-1 1"
+                } else if (keys.right) {
+                    player.style.scale = "1 1"
+                }
+
+                velX = Math.max(-maxSpeed, Math.min(maxSpeed, velX));
+                velY = Math.max(-maxSpeed, Math.min(maxSpeed, velY));
+
+                pos.x += velX;
+                pos.y += velY;
+
+                player.style.left = `${pos.x}px`;
+                player.style.top = `${pos.y}px`;
+
+                playerToObstacleCollision()
+                playerToFirstCoinCollision()
+                playerToSecondCoinCollision()
+            }
+
+            function playerToSecondCoinCollision() {
+                const playerRect = player.getBoundingClientRect()
+                const coinRect = coin2.getBoundingClientRect()
+                const margin = 12
+
+                if (aabb(playerRect, coinRect, margin)) {
+                    coin2.classList.add("gone")
+
+                    if (!hasPlayedCollectCoinTwoSfx) {
+                        playAudio({ id: "crazy03" })
+                        playAudio({ id: "clank" })
+                    }
+                    hasPlayedCollectCoinTwoSfx = true
+
+                    setTimeout(() => {
+                        coin2.remove()
+
+                        if (!hasCalledNextQuestionFunc) onCorrectAns()
+                        hasCalledNextQuestionFunc = true
+
+                        document.body.style.cursor = "url('/imgs/cvariants/cursor_finale.png'), auto"
+
+                        obstacleEls.forEach(el => el.remove())
+                        cancelAnimationFrame(rafId)
+
+                        document.removeEventListener("keydown", onKeyPress);
+                        document.removeEventListener("keyup", onKeyUp);
+                    }, 500);
+                }
+            }
+
+            function playerToFirstCoinCollision() {
+                const playerRect = player.getBoundingClientRect()
+                const coinRect = coin1.getBoundingClientRect()
+                const margin = 12
+
+                if (aabb(playerRect, coinRect, margin)) {
+                    coin1.classList.add("gone")
+
+                    if (!hasPlayedCollectCoinOneSfx) {
+                        playAudio({ id: "crazy03" })
+                        playAudio({ id: "clank" })
+                    }
+                    hasPlayedCollectCoinOneSfx = true
+
+                    setTimeout(() => {
+                        coin1.remove()
+
+                        coin2.classList.add("active")
+                    }, 500);
+                }
+            }
+
+            function playerToObstacleCollision() {
+                obstacleEls.forEach(obs => {
+                    const obsRect = obs.getBoundingClientRect()
+                    const playerRect = player.getBoundingClientRect()
+                    let margin = 15;
+
+                    if (aabb(obsRect, playerRect, margin) && canLoseLife) {
+                        onWrongAns()
+
+                        canLoseLife = false
+
+                        setTimeout(() => {
+                            canLoseLife = true
+                        }, 500);
+                    }
+                })
+            }
+
+            update();
+        }
+    },
+    {
+        content: `<h1 style="font-size: 60px;">ALL YOU NEED TO <p> DO IS PRESS TAB.</h1>`,
+        bomb: {
+            duration: 5
+        },
+        answers: [
+            {
+                text: "OKAY.",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "WHY THO?",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "I WANT MOMMY I WANT MILK!!",
+                correct: false,
+                fontSize: 35
+            },
+            {
+                text: "*PRESSES TAB* A-ARE YOU PROUD OF ME..?",
+                correct: false,
+                fontSize: 30
+            },
+        ],
+        async onQuestion() {
+            setQuestionAreaPointerEventState("all")
+            const overlay = querySelectorHTML(".q96overlay")
+
+            await wait(4000)
+
+            clearBombInterval()
+
+            playAudio({ id: "screech" })
+            overlay.classList.add("active")
+
+            await wait(2000)
+            overlay.classList.remove("active")
+            onCorrectAns()
+        }
+    },
+    {
+        content: `<h1 style="font-size: 60px;">WHAT IS THE <p> WORST DAY OF THE YEAR?</h1>`,
+        bomb: {
+            duration: 10
+        },
+        answers: [
+            {
+                text: "OCTOBER 1ST",
+                correct: false,
+                fontSize: 50
+            },
+            {
+                text: "RED DAY",
+                correct: true,
+                fontSize: 60
+            },
+            {
+                text: "TRUFFLE'S BIRTHDAY",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "FEBRUARY 20TH",
+                correct: false,
+                fontSize: 42
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 60px;">CL<span class='q98i' data-correct="true">I</span>CK THE EYE.</h1>`,
+        questionEl: querySelectorHTML("#q98"),
+        bomb: {
+            duration: 10
+        },
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 55px;">WHAT HAVE WE <p> LEARNED WITH THIS QUIZ?</h1>`,
+        answers: [
+            {
+                text: "NOTHING!",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "HERBERT IS A SEXY CUTIE",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "LOVE ALWAYS WINS!",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "THE BEST DAY OF THE YEAR IS GREEN DAY",
+                correct: true,
+                fontSize: 30
+            },
+        ],
+        onQuestion() { }
+    },
+    {
+        content: `<h1 style="font-size: 55px;"></h1>`,
+        oneChance: true,
+        answers: [
+            {
+                text: "NOTHING!",
+                correct: false,
+                fontSize: 60
+            },
+            {
+                text: "HERBERT IS A SEXY CUTIE",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "LOVE ALWAYS WINS!",
+                correct: false,
+                fontSize: 40
+            },
+            {
+                text: "THE BEST DAY OF THE YEAR IS GREEN DAY",
+                correct: true,
+                fontSize: 30
+            },
+        ],
+        onQuestion() {
+            const possibleQuestions = [
+                `<h1 style="font-size: 50px">HOW MANY 'ONE CHANCE' <p> QUESTIONS HAVE THERE BEEN?</h1>`,
+                `<h1 style="font-size: 45px">IN TOTAL, HOW MANY <p> QUESTIONS HAS HERBERT <p> APPEARED IN?</h1>`,
+                `<h1 style="font-size: 50px">HOW DO YOU <p> CREATE CARDBOARD?</h1>`,
+                `<h1 style="font-size: 50px">ONE QUESTION HAD A <p> BLACK QUESTION NUMBER, <p> WHICH WAS IT?</h1>`,
+                `<h1 style="font-size: 60px">FIND THE TRUFFLES.</h1>`,
+                `<h1 style="font-size: 60px">CLICK THE PIG EYE.</h1>`
+            ]
+
+            const possibleAnswers = [
+                [
+                    {
+                        text: "EIGHT.",
+                        correct: true,
+                        fontSize: 60
+                    },
+                    {
+                        text: "FIVE.",
+                        correct: false,
+                        fontSize: 60
+                    },
+                    {
+                        text: "SEVEN.",
+                        correct: false,
+                        fontSize: 60
+                    },
+                    {
+                        text: "SIX.",
+                        correct: false,
+                        fontSize: 60
+                    }
+                ],
+                [
+                    {
+                        text: "THREE.",
+                        correct: false,
+                        fontSize: 60
+                    },
+                    {
+                        text: "FOUR.",
+                        correct: false,
+                        fontSize: 60
+                    },
+                    {
+                        text: "SIX.",
+                        correct: true,
+                        fontSize: 60
+                    },
+                    {
+                        text: "FIVE.",
+                        correct: false,
+                        fontSize: 60
+                    }
+                ],
+                [
+                    {
+                        text: "THIS ONE..?",
+                        correct: false,
+                        fontSize: 50
+                    },
+                    {
+                        text: "OR THIS ONE?",
+                        correct: false,
+                        fontSize: 42
+                    },
+                    {
+                        text: "MAYBE THIS ONE.",
+                        correct: false,
+                        fontSize: 40
+                    },
+                    {
+                        text: "WAS IT THIS ONE?",
+                        correct: true,
+                        fontSize: 42
+                    }
+                ],
+                [
+                    {
+                        text: "QUESTION 69",
+                        correct: false,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 32",
+                        correct: true,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 19",
+                        correct: false,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 86",
+                        correct: false,
+                        fontSize: 45
+                    }
+                ],
+                [
+                    {
+                        text: "QUESTION 47",
+                        correct: false,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 40",
+                        correct: false,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 44",
+                        correct: true,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 27",
+                        correct: false,
+                        fontSize: 45
+                    }
+                ],
+                [
+                    {
+                        text: "QUESTION 19",
+                        correct: false,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 9",
+                        correct: true,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 10",
+                        correct: false,
+                        fontSize: 45
+                    },
+                    {
+                        text: "QUESTION 4",
+                        correct: false,
+                        fontSize: 45
+                    }
+                ],
+            ]
+
+            const qareaH1 = querySelectorHTML(".questionarea > h1")
+            const qIndex = random(0, possibleQuestions.length)
+
+            qareaH1.innerHTML = `${possibleQuestions[qIndex]}`
+
+            const answerBtns = qsaHTML(".qbutton.game")
+
+            answerBtns.forEach((btn, i) => {
+                // @ts-ignore
+                btn.dataset.correct = `false`
+
+                btn.textContent = `${possibleAnswers[qIndex][i].text}`
+                btn.style.fontSize = `${possibleAnswers[qIndex][i].fontSize}px`
+                btn.dataset.correct = `${possibleAnswers[qIndex][i].correct}`
+            })
+        }
+    },
 ]

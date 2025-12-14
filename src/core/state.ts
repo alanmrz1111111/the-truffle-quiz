@@ -1,3 +1,4 @@
+import { QualityLevel } from "../etc/qualityLevel"
 import { questions } from "../etc/questions"
 
 export const MUSIC_VOLUME = 0.15
@@ -9,7 +10,7 @@ export const state = {
         music: MUSIC_VOLUME
     },
     inMainMenu: false, 
-    questionNumber: questions.length,
+    questionNumber: 86,
     currentBombTimer: 0,
     currentBombInterval: 0,
     lives: 3,
@@ -18,5 +19,9 @@ export const state = {
     ignoreInput: false,
     spawnBouncyThings: true,
     enableTab: false,
-    devMode: true
+    devMode: true,
+    finale: false,
+    canUseCarrot: false,
+    winner: false,
+    quality: QualityLevel.HIGH
 }

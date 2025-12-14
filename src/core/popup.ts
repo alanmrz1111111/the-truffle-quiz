@@ -1,6 +1,5 @@
 import { create, querySelectorHTML } from "../utils"
-import { playAudioSimple } from "./audio"
-import { state } from "./state"
+import { playRandomAudio } from "./audio"
 
 type PopupHeader = {
     content: string,
@@ -28,6 +27,10 @@ export function closeCurrentPopup() {
     popup.addEventListener("animationend", () => popup.remove())
 
     overlay.style.opacity = "0"
+    playRandomAudio([
+        "glass", "glass", "shotgun", "shotgun", "squish02", "squish01"
+    ])
+    // playAudioSimple({ src: "/audio/glass.mp3", volume: state.volume.sfx })
 
     setTimeout(() => {
         overlay.remove()
@@ -45,12 +48,13 @@ export function popup(obj: Popup) {
     el.classList.add("popup")
     header.innerHTML = obj.header.content
     body.innerHTML = obj.bodyContent
-    
+
     if (obj.darkMode) {
         el.classList.add("darkmode")
     }
 
     buttonsrow.classList.add("row")
+    buttonsrow.style.gap = "15px"
 
     obj.buttons.forEach(btn => {
         const btnEl = create("button")
@@ -61,6 +65,10 @@ export function popup(obj: Popup) {
         buttonsrow.append(btnEl)
 
         btnEl.addEventListener("click", btn.onClick)
+
+        if (obj.darkMode) {
+            btnEl.classList.add("darkmode")
+        }
     })
 
     document.body.append(overlay)
@@ -70,5 +78,9 @@ export function popup(obj: Popup) {
     el.append(body)
     el.append(buttonsrow)
 
-    playAudioSimple({ src: "/audio/woosh1.mp3", volume: state.volume.sfx })
+    playRandomAudio([
+        "woosh01", "pop02", "clang01"
+    ])
+
+    // playAudioSimple({ src: "/audio/woosh1.mp3", volume: state.volume.sfx })
 }

@@ -1,15 +1,22 @@
 // import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Checkbox } from "./components/Checkbox";
-import { changeMusicVolume, changeSFXVolume, getAudioDuration, playAudio, playLoopingAudio, registerAudioList } from "./core/audio";
+import { changeMusicVolume, changeSFXVolume, getAudioDuration, playAudio, playLoopingAudio, playRandomAudio, registerAudioList } from "./core/audio";
+import { lines } from "./core/characterLines";
+import { setQualityLevel } from "./core/graphics";
+import { particles } from "./core/particles";
 import { closeCurrentPopup, popup } from "./core/popup";
 import { MUSIC_VOLUME, SFX_VOLUME, state } from "./core/state";
+import { transition } from "./core/transition";
 import { audioList } from "./etc/audioList";
 import { flyingImage } from "./etc/flyingImage";
 import { mqmessages } from "./etc/marqueeMessages";
+import { QualityLevel } from "./etc/qualityLevel";
 import { clearBombInterval, showQuestion } from "./etc/showQuestion";
+import { spookyLines } from "./etc/spookyLines";
 import { seq1, seq2, seq3, seq4, seq5 } from "./etc/startSequences";
 import { trackFPS } from "./etc/trackFPS";
-import { createBoom, createObjectOnPos, forceReflow, qsaHTML, querySelectorHTML, random, showObjectWithBounce, wait } from "./utils";
+import { getCarrot } from "./powerups";
+import { append, create, createBoom, createObjectOnPos, forceReflow, qsaHTML, querySelectorHTML, randFloat, random, showObjectWithBounce, wait } from "./utils";
 import { openUrl } from "@tauri-apps/plugin-opener";
 
 if ("scrollRestoration" in history) {
@@ -22,13 +29,18 @@ customElements.define("c-checkbox", Checkbox)
 trackFPS()
 
 // const tauriWindow = getCurrentWindow()
-const mousePos = { x: 0, y: 0 }
+
+export const mousePos = { x: 0, y: 0 }
+
+let qringAnimInProgress = false
 
 export const buttons = {
     begin: querySelectorHTML(".beginbtn#main")
 }
 
-const checkboxes = qsaHTML(".checkbox")
+// const checkboxes = qsaHTML(".checkbox")
+const toggleBtns = qsaHTML("[data-btn-bh='toggle']")
+const settingBtns = qsaHTML(".settingbutton")
 
 document.addEventListener("contextmenu", (e) => e.preventDefault())
 
@@ -59,6 +71,19 @@ document.addEventListener("keydown", (e) => {
             usePercentages: false
         })
     }
+
+    if (e.ctrlKey && e.key == "k") setQualityLevel(0)
+
+    if (e.ctrlKey && e.key == "o") {
+        state.questionNumber = 89
+        showQuestion(state.questionNumber)
+    }
+
+    if (e.key == "p") {
+        onStats()
+    }
+
+    // if (e.key == "p") getCarrot({ position: { x: 160, y: 160 }, slot: 1 })
 })
 
 document.addEventListener("keydown", (e) => {
@@ -90,6 +115,11 @@ document.addEventListener("click", (e) => {
 
     switch (target.dataset.correct) {
         case "true":
+            if (state.questionNumber == 100) {
+                theEnd()
+                return;
+            }
+
             onCorrectAns();
             break;
 
@@ -132,14 +162,7 @@ document.addEventListener("click", async (e) => {
             break;
 
         case "clearls":
-            localStorage.clear()
-
-            const btn = querySelectorHTML("[data-btn='clearls']")
-            btn.textContent = "CACHE CLEARED!"
-
-            await wait(1000)
-
-            window.location.reload()
+            onCacheClear()
             break;
 
         case "stats":
@@ -149,36 +172,71 @@ document.addEventListener("click", async (e) => {
         case "backtomainmenu":
             hideSecondaryMenuScreen()
             break;
+
+        case "settings":
+            onSettings()
+            break;
+
+        case "backtosecmenufromsettings":
+            exitSettings()
+            break;
+
+        case "about":
+            onAbout()
+            break
     }
 })
 
-checkboxes.forEach(checkbox => {
-    checkbox._checked = checkbox.getAttribute("checked") === "true";
+settingBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        playAudio({ id: "menuclick" })
+    })
+})
 
-    checkbox.addEventListener("click", () => {
-        checkbox._checked = !checkbox._checked;
-        checkbox.setAttribute("checked", `${checkbox._checked}`);
+toggleBtns.forEach(btn => {
+    btn.active = true;
+    if (btn.dataset.setting == "quality") {
+        btn.textContent = "HIGH";
+    } else {
+        btn.textContent = "ON";
+    }
 
-        const setting = checkbox.getAttribute("setting");
+    btn.addEventListener("click", () => {
+        btn.active = !btn.active;
+        if (btn.dataset.setting == "quality") {
+            btn.textContent = btn.active ? "HIGH" : "LOW";
+        } else {
+            btn.textContent = btn.active ? "on" : "off";
+        }
 
-        switch (setting) {
+        switch (btn.dataset.setting) {
             case "music":
-                state.volume.music = checkbox._checked ? MUSIC_VOLUME : 0;
-                changeMusicVolume(state.volume.music);
+                if (btn.active == true) {
+                    changeMusicVolume(MUSIC_VOLUME)
+                } else {
+                    changeMusicVolume(0)
+                }
                 break;
 
             case "sfx":
-                state.volume.sfx = checkbox._checked ? SFX_VOLUME : 0;
-                changeSFXVolume(state.volume.sfx);
+                if (btn.active == true) {
+                    changeSFXVolume(SFX_VOLUME)
+                } else {
+                    changeSFXVolume(0)
+                }
                 break;
 
-            case "showfps":
-                const fpsLabel = querySelectorHTML("#fpslabel");
-                fpsLabel.style.opacity = checkbox._checked ? "1" : "0";
+            case "quality":
+                if (btn.active == false) {
+                    setQualityLevel(QualityLevel.LOW)
+                } else {
+                    setQualityLevel(QualityLevel.HIGH)
+                }
                 break;
         }
     });
 });
+
 buttons.begin.addEventListener("click", beginStartSequence)
 
 let mainMenuAudioObj: HTMLAudioElement | undefined;
@@ -186,8 +244,258 @@ let mainMenuAudioInt: number | undefined;
 
 // @ts-ignore
 let gameAudioObj: HTMLAudioElement | undefined;
+let gameAudioInt: number | undefined
+
+// @ts-ignore
+let finaleAudioObj: HTMLAudioElement | undefined;
 
 type BGType = "normal" | "metal" | "gameover"
+
+function setFinalStatLabelValue() {
+    const gameOverCountLabel = querySelectorHTML("[data-finalstat='gameovers']");
+    const wrongAnsCountLabel = querySelectorHTML("[data-finalstat='wronganswers']")
+
+    gameOverCountLabel.textContent = `${localStorage.getItem("deathCount") || 0}`
+    wrongAnsCountLabel.textContent = `${localStorage.getItem("wrongAnsCount") || 0}`
+}
+
+async function theEnd() {
+    playAudio({ id: "wetfart" })
+    playAudio({ id: "woohoo" })
+    playAudio({ id: "startquiz" })
+
+    state.winner = true
+
+    playAudio({ id: "endingBgm" })
+
+    const overlay = querySelectorHTML(".endOverlay")
+    const truffle = querySelectorHTML(".endtruffle")
+    const winnertext = querySelectorHTML(".winnertext")
+    const qring = querySelectorHTML(".qring")
+    const statspage = querySelectorHTML(".finalstats")
+    const endtransition = querySelectorHTML(".endtransitionoverlay")
+    const cont = querySelectorHTML(".container")
+
+    overlay.classList.add("active")
+    qring.classList.add("fly")
+
+    setFinalStatLabelValue()
+    document.body.classList.add("ending")
+
+    // 10000
+    await wait(10000)
+    truffle.classList.add("gone")
+    winnertext.classList.add("gone")
+
+    // 5000
+    await wait(5000)
+    statspage.classList.add("pagegone")
+
+    // 10000
+    await wait(10000)
+    endtransition.classList.add("active")
+    cont.remove()
+
+    await wait(450)
+    overlay.remove()
+
+    await wait(1000)
+    endtransition.classList.remove("active")
+    postCreditsScene()
+}
+
+async function postCreditsScene() {
+    const ambienceAudioObj = playAudio({ id: "ambience01", getObject: true })!
+    const herbert = querySelectorHTML(".pcsherbert")
+    const endoverlay = querySelectorHTML(".endtransitionoverlay")
+    const scene = querySelectorHTML(".postcreditsscene")
+
+    scene.classList.add("active")
+
+    function setHerbertTalkingState(talking: boolean) {
+        if (talking) {
+            herbert.classList.add("talking")
+        } else {
+            herbert.classList.remove("talking")
+        }
+    }
+
+    await wait(2000)
+
+    playAudio({ id: "herbertLine01" })
+    setHerbertTalkingState(true)
+
+    await wait(1000)
+    setHerbertTalkingState(false)
+
+    await wait(250)
+    setHerbertTalkingState(true)
+
+    await wait(400)
+    setHerbertTalkingState(false)
+
+    await wait(500)
+    setHerbertTalkingState(true)
+
+    await wait(2200)
+    setHerbertTalkingState(false)
+
+    await wait(600)
+    setHerbertTalkingState(true)
+
+    await wait(1200)
+    setHerbertTalkingState(false)
+
+    const girl = querySelectorHTML(".pcsgirl")
+    girl.classList.add("active")
+
+    await wait(1000)
+    herbert.classList.add("scared")
+
+    await wait(2000)
+    ambienceAudioObj.pause()
+
+    endoverlay.classList.add("active")
+
+    setTimeout(() => {
+        localStorage.setItem("shouldRestartWithFadeOut", "true")
+        localStorage.setItem("quizOnReload", "false")
+        localStorage.setItem("menuOnReload", "false")
+        localStorage.setItem("completed", "true")
+
+        window.location.reload()
+    }, 450);
+}
+
+// theEnd()
+
+function onCacheClear() {
+    popup({
+        header: {
+            content: "WAIT!"
+        },
+        bodyContent: `
+            <div class="cacheclearedpage">
+                ARE YOU ABSOLUTELY SURE YOU WANT TO CLEAR THE GAME'S CACHE?
+                THIS CANNOT BE UNDONE.
+            </div>
+        `,
+        buttons: [
+            {
+                text: "YES!",
+                onClick() {
+                    localStorage.clear()
+                    closeCurrentPopup()
+                    cacheClearedPopup()
+                },
+            },
+            {
+                text: "NOPE.",
+                onClick() {
+                    closeCurrentPopup()
+                },
+            },
+        ],
+        darkMode: true
+    })
+}
+
+function cacheClearedPopup() {
+    popup({
+        header: {
+            content: "SUCCESS!"
+        },
+        bodyContent: `
+            <div class="cacheclearedpage02">
+                CACHE CLEARED.
+            </div>
+        `,
+        buttons: [
+            {
+                text: "RESTART",
+                onClick() {
+                    window.location.reload()
+                },
+            },
+        ],
+        darkMode: true
+    })
+}
+
+function onAbout() {
+    popup({
+        header: {
+            content: "ABOUT"
+        },
+        bodyContent: `
+            <div class="aboutpage">
+                <div class="row" style="gap: 15px">
+                    GAME VERSION: <span class="aboutstat">1.0.0</span>
+                </div>
+                <div class="row" style="gap: 15px">
+                    TAURI VERSION: <span class="aboutstat">2.5.1</span>
+                </div>
+
+                <span style="opacity: 0.1; text-transform: capitalize;">${spookyLines[random(0, spookyLines.length)]}</span>
+            </div>
+        `,
+        buttons: [
+            {
+                text: "close",
+                onClick() {
+                    closeCurrentPopup()
+                },
+            }
+        ],
+        darkMode: true
+    })
+}
+
+async function exitSettings() {
+    await transition({ type: "in" })
+
+    const menu = querySelectorHTML("#smenu")
+    const page = querySelectorHTML(".settingspage")
+
+    menu.style.display = "block"
+    setBouncyThingGenerationState(true)
+    // mainMenuAudioObj?.play()
+
+    setBackgroundType("normal")
+
+    page.classList.remove("active")
+
+    state.inMainMenu = true
+
+    manageMenuBGM()
+
+    await wait(200)
+
+    await transition({ type: "out" })
+}
+
+async function onSettings() {
+    await transition({ type: "in" })
+
+    const menu = querySelectorHTML("#smenu")
+    const page = querySelectorHTML(".settingspage")
+
+    state.inMainMenu = false;
+
+    menu.style.display = "none"
+    setBouncyThingGenerationState(false)
+    mainMenuAudioObj?.pause()
+
+    clearInterval(mainMenuAudioInt)
+
+    setBackgroundType("metal")
+
+    page.classList.add("active")
+
+    await wait(200)
+
+    await transition({ type: "out" })
+}
 
 async function hideSecondaryMenuScreen() {
     const secondaryMenuPage = querySelectorHTML("#smenu")
@@ -196,12 +504,11 @@ async function hideSecondaryMenuScreen() {
     const logo = querySelectorHTML(".logo")
     const qotdcont = querySelectorHTML(".qotdcont")
 
+    playAudio({ id: "menuclick" })
     setMainMenuVisibilityState(true)
 
     menugrid.classList.remove("fly")
     logo.classList.remove("fly")
-
-    playAudio({ id: "clang01" })
 
     buttonscol.classList.add("retract")
 
@@ -228,7 +535,7 @@ async function showSecondaryMenuScreen() {
     const logo = querySelectorHTML(".logo")
     const qotdcont = querySelectorHTML(".qotdcont")
 
-    playAudio({ id: "clang01" })
+    playAudio({ id: "menuclick" })
     menuFly()
 
     await wait(300)
@@ -253,7 +560,8 @@ function onStats() {
         },
         bodyContent: `
             <div class="statspage">
-                <h1>todo</h1>
+                <h1>DEATHS: <span class="stat">${localStorage.getItem("deathCount") || 0}</span></h1>
+                <h1>ANSWERS: <span class="stat">${localStorage.getItem("correctAnsCount") || 0} / ${localStorage.getItem("wrongAnsCount") || 0}</span></h1>
             </div>
         `,
         buttons: [
@@ -306,7 +614,9 @@ export function setBackgroundType(type: BGType) {
     bg.classList.add("bg")
 
     document.body.classList.forEach(cls => {
-        document.body.classList.remove(cls)
+        let shouldRemove = cls != "lowgraphics"
+
+        if (shouldRemove) document.body.classList.remove(cls)
     })
 
     switch (type) {
@@ -412,6 +722,24 @@ async function tryAgain() {
 
 function init() {
     setMainMenuVisibilityState(false)
+
+    if (localStorage.getItem("completed") == "true") {
+        const logo = querySelectorHTML(".logo")
+        logo.classList.add("herbert")
+    }
+
+    if (localStorage.getItem("shouldRestartWithFadeOut") == "true") {
+        localStorage.removeItem("shouldRestartWithFadeOut")
+
+        const overlay = querySelectorHTML(".endtransitionoverlay")
+        overlay.style.transition = "none"
+        overlay.classList.add("active")
+
+        setTimeout(() => {
+            overlay.style.transition = "all 0.4s ease"
+            overlay.classList.remove("active")
+        }, 500);
+    }
 
     if (localStorage.getItem("quizOnReload") == "true") {
         const startPage = querySelectorHTML(".startpage")
@@ -526,29 +854,115 @@ export function cheaterPopup() {
 export function onCorrectAns() {
     state.questionNumber++;
 
-    updateQuestionNumber()
-    showQuestion(state.questionNumber)
-    playAudio({ id: "ding" })
-    storeCorrectAnsCount()
+    if (!state.finale) {
+        updateQuestionNumber()
+        showQuestion(state.questionNumber)
+    }
+
+    if (state.finale && state.questionNumber == 100) {
+        finalCorrectAns()
+    }
+
+    if (state.finale && state.questionNumber >= 91) {
+        qringOnCorrectAnswer()
+
+        setTimeout(() => {
+            showQuestion(state.questionNumber)
+        }, 300);
+    } else {
+        playAudio({ id: "ding" })
+    }
+
+    incrementLocalStorageValue("correctAnsCount")
+}
+
+async function finalCorrectAns() {
+    if (state.winner) return
+
+    playAudio({ id: "fart" })
+    finaleAudioObj?.pause()
+
+    querySelectorHTML(".bg").style.animationDuration = "30s"
+
+    await wait(2500)
+
+    playAudio({ id: "bagpipe" })
+}
+
+function qringOnCorrectAnswer() {
+    if (qringAnimInProgress) return;
+    qringAnimInProgress = true
+
+    const qring = querySelectorHTML(".qring")
+    const overlay = querySelectorHTML(".qringfinaleoverlay")
+
+    let hasPlayedAudio = false
+    let hasPlayedClankAnim = false
+
+    qring.classList.remove("onCorrectAns", "clank")
+    void qring.offsetWidth;
+
+    overlay.classList.add("active")
+    qring.classList.add("onCorrectAns")
+
+    playAudio({ id: "finaleDing" })
+
+    document.body.style.pointerEvents = "none"
+
+    function cleanup() {
+        qring.classList.remove("onCorrectAns", "clank")
+        overlay.classList.remove("active")
+
+        document.body.style.pointerEvents = "all";
+        qring.style.zIndex = "9999"
+
+        qringAnimInProgress = false
+    }
+
+    function onTransitionEnd(e: TransitionEvent) {
+        if (e.target !== qring) return
+        setTimeout(() => {
+            cleanup()
+        }, 500);
+
+        updateQuestionNumber()
+        qring.style.zIndex = "9999"
+
+        if (!hasPlayedClankAnim) qring.classList.add("clank")
+        hasPlayedClankAnim = true
+
+        if (!hasPlayedAudio) playAudio({ id: "clank" })
+        hasPlayedAudio = true
+
+        qring.removeEventListener("transitionend", onTransitionEnd)
+    }
+
+    qring.addEventListener("transitionend", onTransitionEnd)
 }
 
 export function onWrongAns() {
     state.lives--;
 
-    storeWrongAnsCount()
+    incrementLocalStorageValue("wrongAnsCount")
     updateLivesLabel()
     setLivesLabelColor()
     loseLifeEffect()
     playAudio({ id: "loselife" })
-    // shakeScreen()
 
     if (state.lives <= 0 || state.danger == true) {
         gameOverSequence({ bomb: false })
-        storeDeathCount()
+        incrementLocalStorageValue("deathCount")
     }
 }
 
-function storeDeathCount() {
+function incrementLocalStorageValue(key: string) {
+    const prev = localStorage.getItem(key) || "0"
+    const newCount = parseInt(prev) + 1
+
+    localStorage.setItem(key, newCount.toString())
+}
+
+/* function storeDeathCount() {
     const prev = localStorage.getItem("deathCount") || "0"
     const newCount = parseInt(prev) + 1
 
@@ -567,15 +981,7 @@ function storeWrongAnsCount() {
     const newCount = parseInt(prev) + 1
 
     localStorage.setItem("wrongAnsCount", newCount.toString())
-}
-
-function shakeScreen() {
-    document.body.classList.add("shake")
-
-    setTimeout(() => {
-        document.body.classList.remove("shake")
-    }, 100);
-}
+} */
 
 export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
     if (state.gameOver) return
@@ -590,7 +996,11 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
     playAudio({ id: "gameover" })
     pauseMusic()
 
-    for (let i = 0; i < 3; i++) {
+    let effectCount = 3;
+
+    if (state.quality == QualityLevel.LOW) effectCount = 1
+
+    for (let i = 0; i < effectCount; i++) {
         let x = 50
         let y = 50
 
@@ -751,9 +1161,6 @@ async function onPlay() {
     const menu = querySelectorHTML(".menugrid")
     const logo = querySelectorHTML(".logo")
     const marquee = querySelectorHTML(".marquee")
-    const settingsPage = querySelectorHTML(".settingspage")
-
-    settingsPage.style.pointerEvents = "none"
 
     updateLivesLabel()
 
@@ -828,6 +1235,81 @@ function manageMarquee() {
     marquee.addEventListener("animationiteration", setMarqueeMsg)
 }
 
+function setHellColorPalette() {
+    const bg = querySelectorHTML(".bg")
+    const qring = querySelectorHTML(".qring")
+    const qbtns = qsaHTML(".qbutton")
+    const liveslabel = querySelectorHTML(".liveslabel")
+    const lives = querySelectorHTML(".lives")
+    const questionarea = querySelectorHTML(".questionarea")
+    const bomb = querySelectorHTML(".bomb")
+
+    document.body.classList.add("finale")
+
+    qring.classList.add("finale")
+    bg.classList.add("finale")
+    liveslabel.classList.add("finale")
+    lives.classList.add("finale")
+    questionarea.classList.add("finale")
+    bomb.classList.add("finale")
+
+    qbtns.forEach(btn => {
+        btn.classList.add("finale")
+    })
+}
+
+export async function manageGameFinale() {
+    const overlay = querySelectorHTML(".finalphaseintroductionoverlay")
+    const bottomrightrow = querySelectorHTML(".bottomrightrow")
+
+    if (bottomrightrow) bottomrightrow.remove()
+
+    document.body.style = ""
+    state.finale = true
+
+    gameAudioObj?.pause()
+    clearInterval(gameAudioInt)
+
+    overlay.classList.add("active")
+    playAudio({ id: "slam" })
+
+    getGameBGMAudioObject()?.pause()
+
+    // 2000
+    await wait(2000)
+
+    const truffle = querySelectorHTML(".truffle")
+
+    playAudio({ id: "screech" })
+
+    truffle.classList.add("active")
+
+    // 2000
+    await wait(2000)
+
+    truffle.classList.add("prepare")
+
+    playAudio({ id: "shotgun" })
+    playAudio({ id: "boom01" })
+    playAudio({ id: "bigBoom" })
+
+    createBoom({
+        x: 50,
+        y: 50,
+        width: 600,
+        height: 600,
+        usePercentages: true,
+        cssLine: "z-index: 9999; cursor: none;"
+    })
+
+    manageFinaleBGM()
+    setHellColorPalette()
+
+    await wait(600)
+
+    overlay.classList.add("drop")
+}
+
 async function manageGameBGM() {
     const duration = await getAudioDuration({ filePath: "/audio/bgm/game01.mp3" })
 
@@ -837,6 +1319,18 @@ async function manageGameBGM() {
     })
 
     gameAudioObj = obj!.audioObj;
+    gameAudioInt = obj!.int
+}
+
+export async function manageFinaleBGM() {
+    const duration = 338000
+
+    const obj = playLoopingAudio({
+        audioID: "finalebgm",
+        audioDuration: duration
+    })
+
+    finaleAudioObj = obj!.audioObj;
 }
 
 async function manageMenuBGM() {
@@ -846,7 +1340,10 @@ async function manageMenuBGM() {
 
     const obj = playLoopingAudio({
         audioID: "menubgm01",
-        audioDuration: duration
+        audioDuration: duration,
+        intervalCb() {
+            mainMenuAudioObj = obj!.audioObj;
+        },
     })
 
     mainMenuAudioObj = obj!.audioObj;

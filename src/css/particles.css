@@ -1,0 +1,49 @@
+.particlecontainer {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    background: red;
+    animation: particleidle 0.5s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes particleidleright {
+    100% {
+        translate: 50px 0;
+        rotate: 360deg;
+        opacity: 0;
+        scale: 0;
+    }
+}
+
+@keyframes particleidleleft {
+    100% {
+        translate: -50px 0;
+        rotate: 360deg;
+        opacity: 0;
+        scale: 0;
+    }
+}
+
+@keyframes particleidletop {
+    100% {
+        translate: 0 -50px;
+        rotate: 360deg;
+        opacity: 0;
+        scale: 0;
+    }
+}
+
+@keyframes particleidlebottom {
+    100% {
+        translate: 0 50px;
+        rotate: 360deg;
+        opacity: 0;
+        scale: 0;
+    }
+}

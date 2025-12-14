@@ -1,6 +1,6 @@
 import { state } from "../core/state"
 import { gameOverSequence, updateLivesLabel } from "../main"
-import { create, Easing, qsaHTML, querySelectorHTML, showObjectWithBounce, wait } from "../utils"
+import { create, Easing, qsaHTML, querySelectorHTML, random, showObjectWithBounce, wait } from "../utils"
 import { questions } from "./questions"
 
 export type Answer = {
@@ -37,27 +37,33 @@ export type Question = {
 }
 
 export function setColorPalette(palette: ColorPalette) {
+    if (state.finale) return
+
     const qring = querySelectorHTML(".qring")
     const qtext = querySelectorHTML(".questionarea > h1")
     const bottomrow = querySelectorHTML(".bottomrow")
+    const carrotRow = querySelectorHTML(".bottomrightrow")
 
     switch (palette) {
         case "allwhite":
             qring.style.filter = "brightness(0) invert(1)"
             qtext.style.filter = "brightness(0) invert(1)";
             bottomrow.style.filter = "brightness(0) invert(1)";
+            if (carrotRow) carrotRow.style.filter = "brightness(0) invert(1)"
             break;
 
         case "normal":
             qring.style.filter = "none"
             qtext.style.filter = "none";
             bottomrow.style.filter = "none";
+            if (carrotRow) carrotRow.style.filter = "none"
             break;
 
         case "darkpurple":
             qring.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)"
             qtext.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)";
             bottomrow.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)";
+            if (carrotRow) carrotRow.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)"
             break;
     }
 }
@@ -69,6 +75,8 @@ export function clearBombInterval() {
 }
 
 async function manageBomb(bombOpts: BombOptions) {
+    if (bombOpts.delay) await wait(bombOpts.delay)
+
     const bombEl = querySelectorHTML(".bomb")
     const bombText = querySelectorHTML(".bombtext")
 
@@ -159,9 +167,11 @@ export async function showQuestion(questionNumber: number) {
 
     if (qst.bomb) {
         manageBomb(qst.bomb)
+        state.canUseCarrot = true
     } else {
         querySelectorHTML(".bomb").style.opacity = "0"
         querySelectorHTML(".bomb").style.display = "none"
+        state.canUseCarrot = false
     }
 
     if (qst.oneChance) {

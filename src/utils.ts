@@ -1,4 +1,5 @@
 import { playAudio } from "./core/audio"
+import { getCarrot } from "./powerups"
 
 export function querySelectorHTML(selector: string) {
     return document.querySelector(selector) as HTMLElement
@@ -120,7 +121,7 @@ export function showObjectWithBounce(args: ShowObjectWithBounceArgs) {
     }
 }
 
-export function createBoom({ x, y, width, height, usePercentages }: { x: number, y: number, width: number, height: number, usePercentages: boolean }) {
+export function createBoom({ x, y, width, height, usePercentages, cssLine = "" }: { x: number, y: number, width: number, height: number, usePercentages: boolean, cssLine?: string }) {
     const boom = createObjectOnPosB({
         selector: "img",
         pos: { x, y },
@@ -135,6 +136,8 @@ export function createBoom({ x, y, width, height, usePercentages }: { x: number,
     boom.draggable = false
 
     boom.addEventListener("animationend", () => boom.remove())
+
+    boom.style.cssText += cssLine
 
     return boom;
 }
@@ -184,4 +187,30 @@ export function q75makeCopyrightBtnVisible() {
 
     copyrightbtn.dataset.btn = ""
     delete copyrightbtn.dataset.correct
+}
+
+export type Size = {
+    width: number,
+    height: number
+}
+
+export function appendToCont(el: HTMLElement | Node | Element | string) {
+    const cont = querySelectorHTML(".container")
+
+    cont.append(el)
+}
+
+export function q69giveCarrot() {
+    getCarrot({
+        position: {
+            x: 15,
+            y: 15
+        },
+        slot: 3
+    })
+
+    const qring = querySelectorHTML(".qring")
+
+    qring.classList.remove("grabby")
+    qring.removeEventListener("click", q69giveCarrot)
 }

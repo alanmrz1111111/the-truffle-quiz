@@ -248,4 +248,94 @@ export const audioList: AudioObject[] = [
         id: "screechFadeOut",
         bus: "sfx"
     },
+    {
+        src: "/audio/blow.mp3",
+        volume: state.volume.sfx,
+        id: "blow",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/ding2.mp3",
+        volume: state.volume.sfx,
+        id: "ding2",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/ahh.mp3",
+        volume: state.volume.sfx,
+        id: "ahh",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/slam.mp3",
+        volume: state.volume.sfx,
+        id: "slam",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/sirens.mp3",
+        volume: state.volume.sfx,
+        id: "sirens",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/bgm/finale01.mp3",
+        volume: state.volume.music,
+        id: "finalebgm",
+        bus: "music"
+    },
+    {
+        src: "/audio/ding3.mp3",
+        volume: state.volume.sfx,
+        id: "finaleDing",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/herbert/extremeAnger.mp3",
+        volume: state.volume.sfx,
+        id: "loudGroan",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/carrot/teehee.mp3",
+        volume: state.volume.sfx,
+        id: "teehee",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/crazy03.mp3",
+        volume: state.volume.sfx,
+        id: "crazy03",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/bagpipe.ogg",
+        volume: state.volume.sfx,
+        id: "bagpipe",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/wetfart.mp3",
+        volume: state.volume.sfx,
+        id: "wetfart",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/bgm/endingBgm.mp3",
+        volume: state.volume.music,
+        id: "endingBgm",
+        bus: "music"
+    },
+    {
+        src: "/audio/ambience.mp3",
+        volume: state.volume.sfx,
+        id: "ambience01",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/herbert/line01.mp3",
+        volume: state.volume.sfx + 0.2,
+        id: "herbertLine01",
+        bus: "sfx"
+    },
 ]

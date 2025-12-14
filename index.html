@@ -7,287 +7,382 @@
     <title>the truffle quiz</title>
     <link rel="stylesheet" href="src/css/style.css">
     <link rel="stylesheet" href="src/css/questions.css">
+    <link rel="stylesheet" href="src/css/particles.css">
 </head>
 
 <body>
-    <div class="bg"></div>
-
-    <div class="transitionoverlay"></div>
-    <div class="creditsoverlay">
-        <h1 style="margin-bottom: 5px; font-size: 45px; color: #ff784f; text-shadow: 0 0 20px #ff784f8c;">THE TRUFFLE
-            QUIZ (2025)</h1>
-
-        <h2 style="margin-top: 30px;"><span class="highlight">CREATED BY:</span> ONE</h2>
-        <h2><span class="highlight">INSPIRED BY: </span>THE IMPOSSIBLE QUIZ <span class="highlight">-</span>
-            SPLAPP-ME-DO</h2>
-
-        <h2 style="margin-top: 30px;"><span class="highlight">QUIZ SONG: </span>GET IT TOGETHER <span
-                class="highlight">-</span> THE GO! TEAM</h2>
-        <h2><span class="highlight">MENU LOOP: </span>FUNNY BONE <span class="highlight">-</span> theBgMusicMaster</h2>
-        <h2><span class="highlight">FONTS: </span> ACTION MAN, COMIC SANS MS</h2>
-
-        <h2 style="margin-top: 30px;">SPRITES CREATED USING <span class="highlight">adobe animate</span></h2>
-        <h2><span class="highlight">dedicated to:</span> MY CAT &lt;3 </h2>
-        <h2 style="opacity: 0.1; font-weight: normal;">WEBVIEW2, TYPESCRIPT + TAURI, VITE DEV SERVER</h2>
-        <h2 style="opacity: 0.1; font-weight: bolder; font-family: 'comic sans ms', sans-serif;">v1.0.0</h2>
-    </div>
-
-    <div class="startpage">
-        <button class="beginbtn" id="main">START</button>
-
-        <div class="alien"></div>
-        <div class="alien flippedalien"></div>
-
-        <div class="logo"></div>
-    </div>
-
-    <div class="secondarymenu" id="smenu">
-        <div class="smenucolumn">
-            <button class="qbutton left" style="font-size: 60px; animation-duration: 0.5s;"
-                data-btn="stats">STATS</button>
-            <button class="qbutton left" style="font-size: 55px; animation-duration: 0.6s;">SETTINGS</button>
-            <button class="qbutton left" style="font-size: 55px; animation-duration: 0.9s;"
-                data-btn="copyrightnotice">CREDITS</button>
-            <button class="qbutton left" style="font-size: 60px; animation-duration: 0.4s;"
-                data-btn="backtomainmenu">BACK</button>
-        </div>
-
-        <div class="qotdcont" style="opacity: 0;">
-            <h1 style="opacity: 0.6;">THE TRUFFLE QUIZ</h1>
-            <h1 style="opacity: 0.5;">THE TRUFFLE QUIZ</h1>
-            <h1 style="opacity: 0.4;">THE TRUFFLE QUIZ</h1>
-            <h1 style="opacity: 0.3;">THE TRUFFLE QUIZ</h1>
-            <h1 style="opacity: 0.2;">THE TRUFFLE QUIZ</h1>
-            <h1 style="opacity: 0.1;">THE TRUFFLE QUIZ</h1>
-        </div>
-    </div>
-
-    <div class="menugrid hidden" id="menugrid">
-        <button class="qbutton left" style="font-size: 60px;" data-main-menu="true" data-btn="play">PLAY!</button>
-        <button class="qbutton right" style="font-size: 60px;" data-main-menu="true" data-btn="menus">MENUS</button>
-        <button class="qbutton left" style="font-size: 60px;" data-main-menu="true" data-btn="more">MORE</button>
-        <button class="qbutton right" style="font-size: 60px;" data-main-menu="true" data-btn="quit">QUIT...</button>
-    </div>
-
-    <div class="settingspage">
-        <h1 class="settingspagetitle">SETTINGS</h1>
-        <div class="settingsbackbutton" data-btn="backtomenu_b"></div>
-
-        <div class="settingspagecont">
-            <div class="settingrow" style="margin-top: 50px;">
-                <h1>MUSIC</h1>
-                <div class="checkbox" checked="true" setting="music"></div>
+    <div id="viewport">
+        <div id="app">
+            <div class="bg"></div>
+            
+            <div class="endOverlay">
+                <div class="winnertext"></div>
+                <div class="endtruffle"></div>
+            
+                <div class="finalstats">
+                    <h1 class="finalstatspagetitle">IT ONLY TOOK YOU...</h1>
+                    <h1 class="finalstatlabel"><span class="finalstat" data-finalstat="gameovers">67</span> GAME OVERS</h1>
+                    <h1 class="finalstatlabel"><span class="finalstat" data-finalstat="wronganswers">61</span> WRONG ANSWERS
+                    </h1>
+                </div>
+            
+                <div class="endingcarrot"></div>
+                <h1 class="thanksforplaying">THANKS FOR PLAYING &lt;3</h1>
             </div>
-
-            <div class="settingrow">
-                <h1>SFX</h1>
-                <div class="checkbox" checked="true" setting="sfx"></div>
+            <div class="transitionoverlay"></div>
+            <div class="qringfinaleoverlay"></div>
+            <div class="finalphaseintroductionoverlay">
+                <div class="truffle"></div>
             </div>
-
-            <div class="settingrow">
-                <h1>SHOW FPS</h1>
-                <div class="checkbox" checked="false" setting="showfps"></div>
+            <div class="endtransitionoverlay"></div>
+            
+            <div class="postcreditsscene">
+                <div class="pcsherbert"></div>
+                <div class="pcsgirl"></div>
             </div>
-
-            <div class="row" style="gap: 25px; margin-top: 30px;">
-                <button data-btn="clearls">clear cache</button>
+            
+            <div class="q96overlay">
+                <h1 class="q96overlaytext1">ACTUALLY, DON'T BOTHER.</h1>
+                <h1 class="q96overlaytext2">YOU'LL DIE!</h1>
             </div>
-        </div>
-    </div>
-
-    <div class="copyrightbtn" data-btn="copyrightnotice"></div>
-
-    <div class="marquee" style="opacity: 0; transition: all 0.3s ease;">???</div>
-
-    <div class="gameoverscreen">
-        <img src="/imgs/gameover.png" alt="game over" class="gameoverimg">
-
-        <div class="row" style="gap: 35px; display: none;" id="gameoverbuttonsrow">
-            <button class="gameoverbutton" data-btn="tryagain">TRY AGAIN!</button>
-            <button class="gameoverbutton" data-btn="backtomenu">give up...</button>
-        </div>
-    </div>
-
-    <div class="container hidden">
-        <div id="q3">
-            <div class="q3bg"></div>
-            <div class="q3herbert"></div>
-
-            <h3 class="q3label"></h3>
-        </div>
-
-        <div id="q9">
-            <div class="row">
-                <img src="/imgs/q9/eye01.png" data-correct="false" draggable="false" alt="eye" class="q9img1">
-                <img src="/imgs/q9/eye02.png" data-correct="true" draggable="false" alt="eye" class="q9img1">
+            
+            <div class="carrotgetoverlay"></div>
+            
+            <div class="creditsoverlay">
+                <h1 style="margin-bottom: 5px; font-size: 45px; color: #ff784f; text-shadow: 0 0 20px #ff784f8c;">THE TRUFFLE
+                    QUIZ :3</h1>
+            
+                <h2 style="margin-top: 30px;"><span class="highlight">CREATED BY:</span> ONEWITHPNEUMONIA</h2>
+                <h2><span class="highlight">INSPIRED BY: </span>THE IMPOSSIBLE QUIZ <span class="highlight">-</span>
+                    SPLAPP-ME-DO</h2>
+            
+                <h2 style="margin-top: 30px;"><span class="highlight">QUIZ SONG: </span>GET IT TOGETHER <span
+                        class="highlight">-</span> THE GO! TEAM</h2>
+                <h2><span class="highlight">MENU LOOP: </span>FUNNY BONE <span class="highlight">-</span> theBgMusicMaster</h2>
+                <h2><span class="highlight">FONTS: </span> ACTION MAN, COMIC SANS MS</h2>
+            
+                <h2 style="margin-top: 30px;">ARTWORK CREATED USING <span class="highlight">adobe animate</span></h2>
+                <h2><span class="highlight">dedicated to:</span> MY CAT &lt;3 </h2>
+                <h2 style="opacity: 0.1; font-weight: normal;">WEBVIEW2, TYPESCRIPT + TAURI, VITE DEV SERVER</h2>
+                <h2 style="opacity: 0.1; font-weight: bolder; font-family: 'comic sans ms', sans-serif;">v1.0.0</h2>
             </div>
-        </div>
-
-        <div id="q11"></div>
-
-        <div id="q18">
-            <img src="/imgs/q18/egg.png" data-correct="false" style="margin-right: 15px;" draggable="false" alt="Egg"
-                width="105" height="120">
-            <img src="/imgs/q18/eye.png" data-correct="false" style="margin-right: 15px;" draggable="false" alt="Eye"
-                width="140" height="140">
-            <img src="/imgs/q18/toothpick.png" data-correct="true" style="margin-right: 15px;" draggable="false"
-                alt="Toothpick" height="120">
-            <img src="/imgs/q18/tooth.png" data-correct="false" style="margin-right: 15px;" draggable="false"
-                alt="Tooth" width="110" height="110">
-            <img src="/imgs/q18/carrot.png" data-correct="false" style="margin-right: 15px;" draggable="false"
-                alt="Tooth" width="120" height="160">
-        </div>
-
-        <div id="q19">
-            <div class="q19bg"></div>
-            <div class="q19herbert"></div>
-        </div>
-
-        <div id="q22">
-            <div class="q22bg"></div>
-        </div>
-
-        <div id="q27">
-            <div class="q27truffle"></div>
-            <div class="q27table"></div>
-            <div class="q27pill01" data-correct="false"></div>
-            <div class="q27pill02" data-correct="false"></div>
-            <div class="q27pill03" data-correct="true"></div>
-        </div>
-
-        <div id="q28">
-            <div class="q28bg"></div>
-            <img src="/imgs/q28/synapse.png" alt="neuron" draggable="false" class="q28neurons">
-        </div>
-
-        <div id="q32">
-            <div class="q32bg"></div>
-        </div>
-
-        <div id="q35">
-            <div class="q35bg"></div>
-            <div class="q35icon"></div>
-
-            <div class="row spikes">
-                <div class="q35spike"></div>
-                <div class="q35spike"></div>
-                <div class="q35spike"></div>
-            </div>
-        </div>
-
-        <div id="q39">
-            <div class="row q39">
-                <h1 data-correct="false">46</h1>
-                <h1 data-correct="false">38</h1>
-                <h1 data-correct="false">67</h1>
-                <h1 data-correct="false">53</h1>
-            </div>
-        </div>
-
-        <div id="q41">
-            <div class="q41bg"></div>
-            <div class="q41herbert"></div>
-            <div class="q41text">0/10</div>
-        </div>
-
-        <div id="q44">
-            <div class="q44bg"></div>
-        </div>
-
-        <div id="q47">
-            <div class="q47bg2"></div>
-            <div class="q47bg"></div>
-
-            <div class="q47endpoint"></div>
-        </div>
-
-        <div id="q55">
-            <div class="q55obj"></div>
-            <div class="q55text"></div>
-
-            <div class="q55input"></div>
-        </div>
-
-        <div id="q58">
-            <div class="q58bg static"></div>
-            <div class="q58bg main"></div>
-            <div class="q58herbert"></div>
-            <div class="q58crosshair"></div>
-            <div class="q58text">0/10</div>
-        </div>
-
-        <div id="q62">
-            <button class="beginbtn" id="q62btn">CLICK ME!</button>
-        </div>
-
-        <div id="q64">
-            <div class="q64cone"></div>
-            <div class="q64mailman"></div>
-            <div class="q64text">
-                <div class="q64letter" style="animation: none; position: static;"></div>
-                <span id="q64counter">0/10</span>
-            </div>
-        </div>
-
-        <div id="q66">
-            <div class="q66cont">
-                TruffleOS 2. build 6640-release <p></p>
-                &nbsp; <p></p>
-
-                Q66. What happened? <p></p>
-                1. You installed MS-DOS. <p></p>
-                2. This is 1981. <p></p>
-                3. ntoskrnl.exe <p></p>
-                4. npm run tauri dev. <p></p>
-                LIVES: <span id="q66liveslabel">3</span>
-                <p></p>
-
-                &nbsp; <p></p>
-                <div class="row" style="justify-content: start; gap: 5px;">
-                    Enter your choice (1-4): <span class="q66inputlabel"></span>
-                    <div class="q66cursor"></div>
+            
+            <div class="settingspage">
+                <div class="settingspagebackbtn" data-btn="backtosecmenufromsettings"></div>
+            
+                <h1 class="settingspagetitle">SETTINGS</h1>
+            
+                <div class="settingspagecont">
+                    <div class="settingrow">
+                        <h1>MUSIC</h1>
+                        <button class="settingbutton" data-btn-bh="toggle" data-setting="music"
+                            style="cursor: url('/imgs/cvariants/grabby_mtl.png'), auto;">ON</button>
+                    </div>
+                    <div class="settingrow">
+                        <h1>SFX</h1>
+                        <button class="settingbutton" data-btn-bh="toggle" data-setting="sfx"
+                            style="cursor: url('/imgs/cvariants/grabby_mtl.png'), auto;">ON</button>
+                    </div>
+                    <div class="settingrow">
+                        <h1>QUALITY</h1>
+                        <button class="settingbutton" data-btn-bh="toggle" data-setting="quality"
+                            style="cursor: url('/imgs/cvariants/grabby_mtl.png'), auto;">HIGH</button>
+                    </div>
+            
+                    <div class="row" style="margin-top: 15px; gap: 25px;">
+                        <button class="settingbutton fit" data-btn="clearls"
+                            style="cursor: url('/imgs/cvariants/grabby_mtl.png'), auto;">CLEAR CACHE</button>
+                        <button class="settingbutton fit" data-btn="about"
+                            style="cursor: url('/imgs/cvariants/grabby_mtl.png'), auto;">ABOUT</button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div id="q72">
-            <div class="row" style="gap: 10px;">
-                <div class="q72num one" data-q72-num="one">1</div>
-                <div class="q72num two" data-q72-num="two">2</div>
-                <div class="q72num three" data-q72-num="three">3</div>
-                <div class="q72num four" data-q72-num="four">4</div>
+            
+            <div class="startpage">
+                <button class="beginbtn" id="main">START</button>
+            
+                <div class="alien"></div>
+                <div class="alien flippedalien"></div>
+            
+                <div class="logo"></div>
             </div>
-        </div>
-
-        <div id="q75">
-            <div class="q75bg"></div>
-            <div class="q75earth"></div>
-        </div>
-
-        <div class="questionarea"></div>
-
-        <div class="bomb">
-            <h2 class="bombtext">???</h2>
-        </div>
-
-        <div class="qring">
-            <div class="qnumber">1.</div>
-        </div>
-
-        <div class="menugrid" style="top: 69%;">
-            <button class="qbutton game left">ANSWER</button>
-            <button class="qbutton game right">ANSWER</button>
-            <button class="qbutton game left">ANSWER</button>
-            <button class="qbutton game right">ANSWER</button>
-        </div>
-
-        <div class="bottomrow">
-            <h1 class="liveslabel">LIVES:</h1>
-            <h1 class="lives full">3</h1>
+            
+            <div class="secondarymenu" id="smenu">
+                <div class="smenucolumn">
+                    <button class="qbutton left" style="font-size: 60px; animation-duration: 0.5s;" data-btn="stats">STATS</button>
+                    <button class="qbutton left" style="font-size: 55px; animation-duration: 0.6s;"
+                        data-btn="settings">SETTINGS</button>
+                    <button class="qbutton left" style="font-size: 60px; animation-duration: 0.9s;"
+                        data-btn="copyrightnotice">CREDITS</button>
+                    <button class="qbutton left" style="font-size: 60px; animation-duration: 0.4s;"
+                        data-btn="backtomainmenu">BACK</button>
+                </div>
+            
+                <div class="qotdcont" style="opacity: 0;">
+                    <h1 style="opacity: 0.6;">THE TRUFFLE QUIZ</h1>
+                    <h1 style="opacity: 0.5;">THE TRUFFLE QUIZ</h1>
+                    <h1 style="opacity: 0.4;">THE TRUFFLE QUIZ</h1>
+                    <h1 style="opacity: 0.3;">THE TRUFFLE QUIZ</h1>
+                    <h1 style="opacity: 0.2;">THE TRUFFLE QUIZ</h1>
+                    <h1 style="opacity: 0.1;">THE TRUFFLE QUIZ</h1>
+                </div>
+            </div>
+            
+            <div class="menugrid hidden" id="menugrid">
+                <button class="qbutton left" style="font-size: 60px;" data-main-menu="true" data-btn="play">PLAY!</button>
+                <button class="qbutton right" style="font-size: 60px;" data-main-menu="true" data-btn="menus">MENUS</button>
+                <button class="qbutton left" style="font-size: 60px;" data-main-menu="true" data-btn="more">MORE</button>
+                <button class="qbutton right" style="font-size: 60px;" data-main-menu="true" data-btn="quit">QUIT...</button>
+            </div>
+            
+            <div class="copyrightbtn" data-btn="copyrightnotice"></div>
+            
+            <div class="marquee" style="opacity: 0; transition: all 0.3s ease;">???</div>
+            
+            <div class="gameoverscreen">
+                <img src="/imgs/gameover.png" alt="game over" class="gameoverimg">
+            
+                <div class="row" style="gap: 35px; display: none;" id="gameoverbuttonsrow">
+                    <button class="gameoverbutton" data-btn="tryagain">TRY AGAIN!</button>
+                    <button class="gameoverbutton" data-btn="backtomenu">give up...</button>
+                </div>
+            </div>
+            
+            <div class="container hidden">
+                <div id="q3">
+                    <div class="q3bg"></div>
+                    <div class="q3herbert"></div>
+            
+                    <h3 class="q3label"></h3>
+                </div>
+            
+                <div id="q9">
+                    <div class="row">
+                        <img src="/imgs/q9/eye01.png" data-correct="false" draggable="false" alt="eye" class="q9img1">
+                        <img src="/imgs/q9/eye02.png" data-correct="true" draggable="false" alt="eye" class="q9img1">
+                    </div>
+                </div>
+            
+                <div id="q11"></div>
+            
+                <div id="q18">
+                    <img src="/imgs/q18/egg.png" data-correct="false" style="margin-right: 15px;" draggable="false" alt="Egg"
+                        width="105" height="120">
+                    <img src="/imgs/q18/eye.png" data-correct="false" style="margin-right: 15px;" draggable="false" alt="Eye"
+                        width="140" height="140">
+                    <img src="/imgs/q18/toothpick.png" data-correct="true" style="margin-right: 15px;" draggable="false"
+                        alt="Toothpick" height="120">
+                    <img src="/imgs/q18/tooth.png" data-correct="false" style="margin-right: 15px;" draggable="false" alt="Tooth"
+                        width="110" height="110">
+                    <img src="/imgs/q18/carrot.png" data-correct="false" style="margin-right: 15px;" draggable="false" alt="Tooth"
+                        width="120" height="160">
+                </div>
+            
+                <div id="q19">
+                    <div class="q19bg"></div>
+                    <div class="q19herbert"></div>
+                </div>
+            
+                <div id="q22">
+                    <div class="q22bg"></div>
+                </div>
+            
+                <div id="q27">
+                    <div class="q27truffle"></div>
+                    <div class="q27table"></div>
+                    <div class="q27pill01" data-correct="false"></div>
+                    <div class="q27pill02" data-correct="false"></div>
+                    <div class="q27pill03" data-correct="true"></div>
+                </div>
+            
+                <div id="q28">
+                    <div class="q28bg"></div>
+                    <img src="/imgs/q28/synapse.png" alt="neuron" draggable="false" class="q28neurons">
+                </div>
+            
+                <div id="q32">
+                    <div class="q32bg"></div>
+                </div>
+            
+                <div id="q35">
+                    <div class="q35bg"></div>
+                    <div class="q35icon"></div>
+            
+                    <div class="row spikes">
+                        <div class="q35spike"></div>
+                        <div class="q35spike"></div>
+                        <div class="q35spike"></div>
+                    </div>
+                </div>
+            
+                <div id="q39">
+                    <div class="row q39">
+                        <h1 data-correct="false">46</h1>
+                        <h1 data-correct="false">38</h1>
+                        <h1 data-correct="false">67</h1>
+                        <h1 data-correct="false">53</h1>
+                    </div>
+                </div>
+            
+                <div id="q41">
+                    <div class="q41bg"></div>
+                    <div class="q41herbert"></div>
+                    <div class="q41text">0/10</div>
+                </div>
+            
+                <div id="q44">
+                    <div class="q44bg"></div>
+                </div>
+            
+                <div id="q47">
+                    <div class="q47bg2"></div>
+                    <div class="q47bg"></div>
+            
+                    <div class="q47endpoint"></div>
+                </div>
+            
+                <div id="q55">
+                    <div class="q55obj"></div>
+                    <div class="q55text"></div>
+            
+                    <div class="q55input"></div>
+                </div>
+            
+                <div id="q58">
+                    <div class="q58bg static"></div>
+                    <div class="q58bg main"></div>
+                    <div class="q58herbert"></div>
+                    <div class="q58crosshair"></div>
+                    <div class="q58text">0/10</div>
+                </div>
+            
+                <div id="q62">
+                    <button class="beginbtn" id="q62btn">CLICK ME!</button>
+                </div>
+            
+                <div id="q64">
+                    <div class="q64cone"></div>
+                    <div class="q64mailman"></div>
+                    <div class="q64text">
+                        <div class="q64letter" style="animation: none; position: static;"></div>
+                        <span id="q64counter">0/10</span>
+                    </div>
+                </div>
+            
+                <div id="q66">
+                    <div class="q66cont">
+                        TruffleOS 2. build 6640-release <p></p>
+                        &nbsp; <p></p>
+            
+                        Q66. What happened? <p></p>
+                        1. You installed MS-DOS. <p></p>
+                        2. This is 1981. <p></p>
+                        3. ntoskrnl.exe <p></p>
+                        4. npm run tauri dev. <p></p>
+                        LIVES: <span id="q66liveslabel">3</span>
+                        <p></p>
+            
+                        &nbsp; <p></p>
+                        <div class="row" style="justify-content: start; gap: 5px;">
+                            Enter your choice (1-4): <span class="q66inputlabel"></span>
+                            <div class="q66cursor"></div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div id="q72">
+                    <div class="row" style="gap: 10px;">
+                        <div class="q72num one" data-q72-num="one">1</div>
+                        <div class="q72num two" data-q72-num="two">2</div>
+                        <div class="q72num three" data-q72-num="three">3</div>
+                        <div class="q72num four" data-q72-num="four">4</div>
+                    </div>
+                </div>
+            
+                <div id="q75">
+                    <div class="q75bg"></div>
+                    <div class="q75earth"></div>
+                </div>
+            
+                <div id="q81">
+                    <div class="q81herbert"></div>
+                    <div class="q81bg"></div>
+                    <div class="q81speechbubble"></div>
+                    <div class="q81inputlabel"></div>
+                </div>
+            
+                <div id="q86">
+                    <div class="q86bg"></div>
+                    <div class="q86sword"></div>
+                    <div class="q86rock"></div>
+                    <div class="q86trigger"></div>
+                </div>
+            
+                <div id="q93">
+                    <div class="q93row">
+                        <button class="q93answer">
+                            1
+                        </button>
+                        <button class="q93answer">
+                            1
+                        </button>
+                        <button class="q93answer">
+                            1
+                        </button>
+                        <button class="q93answer">
+                            1
+                        </button>
+                    </div>
+                </div>
+            
+                <div id="q95">
+                    <div class="q95player"></div>
+                    <div class="q95bg"></div>
+                    <div class="q95coin firstcoin"></div>
+                    <div class="q95coin secondcoin"></div>
+                </div>
+            
+                <div id="q98">
+                    <div class="q98row">
+                        <div class="q98eye" data-correct="false"></div>
+                    </div>
+                </div>
+            
+                <div class="questionarea"></div>
+            
+                <div class="bomb">
+                    <h2 class="bombtext">???</h2>
+                </div>
+            
+                <div class="qring">
+                    <div class="qnumber">1.</div>
+                </div>
+            
+                <div class="menugrid" style="top: 69%;">
+                    <button class="qbutton game left">ANSWER</button>
+                    <button class="qbutton game right">ANSWER</button>
+                    <button class="qbutton game left">ANSWER</button>
+                    <button class="qbutton game right">ANSWER</button>
+                </div>
+            
+                <div class="bottomrow">
+                    <h1 class="liveslabel">LIVES:</h1>
+                    <h1 class="lives full">3</h1>
+                </div>
+            
+                <div class="bottomrightrow">
+                    <div class="carrotslot" data-cslot="1" populated="false"></div>
+                    <div class="carrotslot" data-cslot="2" populated="false"></div>
+                    <div class="carrotslot" data-cslot="3" populated="false"></div>
+                </div>
+            
+                <div id="tsparticles"></div>
+            </div>
+            
+            <script src="src/main.ts" type="module"></script>
+            <script src="src/powerups.ts" type="module"></script>
         </div>
     </div>
-
-    <script src="src/main.ts" type="module"></script>
 </body>
 
 </html>

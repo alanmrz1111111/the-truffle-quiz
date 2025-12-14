@@ -22,6 +22,7 @@
     height: 150px;
     background-repeat: no-repeat;
     background-size: contain;
+    cursor: url("/imgs/grabby.png"), auto;
 }
 
 .q3label {
@@ -302,6 +303,7 @@
     opacity: 0;
     font-size: 45px;
     color: #ff48ff;
+    transform: translate(-50%, -50%);
 }
 
 .something:hover {
@@ -403,7 +405,7 @@
     background-image: url("/imgs/q41/herbert.png");
     background-size: 140px;
     background-repeat: no-repeat;
-    transition: transform 0.1s linear;
+    transition: transform 0.08s linear;
     transform-origin: center bottom;
 }
 
@@ -477,6 +479,19 @@
     opacity: 0.01;
     cursor: url("/imgs/grabby.png"), auto;
     transition: all 0.3s ease;
+}
+
+.q44carrot {
+    width: 64px;
+    height: 72px;
+    background-image: url("/imgs/carrot01.png");
+    background-size: 64px 72px;
+    opacity: 0;
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+.q44carrot:hover {
+    opacity: 1;
 }
 
 .q44truffle.tocenter {
@@ -1343,4 +1358,568 @@
     100% {
         left: 40%;
     }
+}
+
+#q81 {
+    display: none;
+}
+
+.q81bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q81/bg.png");
+    background-size: 850px 600px;
+    animation: q81bg3d 2s linear forwards;
+    transform: scale(1.5);
+}
+
+.q81herbert {
+    position: fixed;
+    top: 45%;
+    left: 25%;
+    width: 140px;
+    height: 140px;
+    background-image: url("/imgs/q81/herbert.png");
+    background-size: 140px 140px;
+    z-index: 999;
+    transform: perspective(600px) translateZ(-700px) rotateY(180deg);
+    animation: q81herbert3d 2s linear forwards;
+}
+
+.q81herbert.blushing {
+    background-image: url("/imgs/q81/herbert_blushing.png");
+}
+
+@keyframes q81bg3d {
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes q81herbert3d {
+    100% {
+        transform: perspective(600px) translateZ(100px) rotateY(0deg);
+    }
+}
+
+.q81speechbubble {
+    position: absolute;
+    top: 25%;
+    left: 47%;
+    width: 220px;
+    height: 180px;
+    background-image: url("/imgs/q81/bubble.gif");
+    background-size: 220px 180px;
+    z-index: 999;
+    opacity: 0;
+    transition: all 0.3s ease;
+    scale: 0;
+    filter: drop-shadow(0 0 40px #ffffff25);
+    transition: all 0.3s ease;
+}
+
+.q81dialoglabel {
+    position: absolute;
+    top: 12%;
+    left: 5%;
+    background-color: #5739ff;
+    background-image: linear-gradient(#cc4aff, #815eff);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #6e4dff;
+    font-weight: bolder;
+    pointer-events: none;
+    text-align: center;
+}
+
+.q81speechbubble.active {
+    animation: q81objappear 0.5s ease-out forwards;
+}
+
+.q81speechbubble.gone {
+    animation: q81objgone 0.4s ease-out forwards;
+}
+
+@keyframes q81objgone {
+    0% {
+        opacity: 1;
+        scale: 1;
+    }
+
+    50% {
+        opacity: 1;
+        scale: 1.1;
+    }
+
+    100% {
+        opacity: 0;
+        scale: 0;
+    }
+}
+
+@keyframes q81objappear {
+    50% {
+        opacity: 1;
+        scale: 1;
+    }
+
+    70% {
+        opacity: 1;
+        scale: 1.1;
+    }
+
+    100% {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+.q81object {
+    position: fixed;
+    top: 32%;
+    left: 57%;
+    width: 64px;
+    height: 64px;
+    background-size: 64px 64px;
+    z-index: 999;
+    opacity: 0;
+    scale: 0.7;
+    transition: all 0.3s ease;
+}
+
+.q81object.apple {
+    opacity: 1;
+    scale: 1;
+    background-image: url("/imgs/q81/apple.gif");
+}
+
+.q81object.star {
+    opacity: 1;
+    scale: 1;
+    background-image: url("/imgs/q81/star.gif");
+}
+
+.q81object.flower {
+    opacity: 1;
+    scale: 1;
+    background-image: url("/imgs/q81/flower.gif");
+    width: 48px;
+    background-size: 48px 64px;
+    left: 58%;
+}
+
+.q81object.house {
+    opacity: 1;
+    scale: 1;
+    background-image: url("/imgs/q81/house.gif");
+}
+
+.q81object.heart {
+    opacity: 1;
+    scale: 1;
+    background-image: url("/imgs/q81/heart.gif");
+}
+
+.q81inputlabel {
+    position: fixed;
+    top: 60%;
+    left: 49%;
+    font-size: 42px;
+    font-family: monospace;
+    background-color: #5739ff;
+    background-image: linear-gradient(#cc4aff, #815eff);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #6e4dff6c;
+    font-weight: bolder;
+    pointer-events: none;
+    width: 220px;
+    text-align: center;
+}
+
+.q81heart {
+    width: 48px;
+    height: 48px;
+    background-image: url("/imgs/q81/heart.gif");
+    z-index: 999;
+    background-size: 48px 48px;
+    animation: q81heartfly 1.0s linear forwards;
+}
+
+@keyframes q81heartfly {
+    100% {
+        translate: 0 -500px;
+        opacity: 0;
+        rotate: 360deg;
+    }
+}
+
+#q86 {
+    display: none;
+}
+
+.q86rock {
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    width: 300px;
+    height: 130px;
+    background-image: url("/imgs/q86/rock.png");
+    background-size: 300px 130px;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 15px 60px #000000b0);
+}
+
+.q86sword {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 350px;
+    background-image: url("/imgs/q86/sword.png");
+    background-size: 120px 350px;
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+.q86sword.active {
+    animation: q86swordshow 1.5s ease forwards;
+}
+
+@keyframes q86swordshow {
+    50% {
+        transform: translate(-50%, -50%) scaleY(-1);
+        z-index: 999;
+        top: 50%;
+    }
+
+    80% {
+        transform: translate(-50%, -50%) scaleY(-1);
+        z-index: 999;
+        filter: drop-shadow(0 0 60px #ffe600);
+        top: 50%;
+    }
+
+    90% {
+        transform: translate(-50%, -50%) scaleY(-1);
+        z-index: 999;
+        filter: drop-shadow(0 0 60px #ffe600);
+        top: 55%;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scaleY(-1);
+        z-index: 999;
+        filter: drop-shadow(0 0 60px #ffe600);
+        top: -120%;
+    }
+}
+
+.q86trigger {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 32px;
+    width: 150px;
+    background: #00ff0044;
+    opacity: 0;
+}
+
+.q86bg {
+    background-image: url("/imgs/q86/bg.png");
+    inset: 0;
+    position: fixed;
+    opacity: 1;
+    filter: brightness(80%) saturate(70%);
+}
+
+#q93 {
+    display: none;
+}
+
+.q93demon {
+    position: fixed;
+    top: 50%;
+    left: -20%;
+    transform: translate(-50%, -50%) scaleX(-1);
+    width: 180px;
+    height: 128px;
+    background-image: url("/imgs/q92/demon.gif");
+    background-size: 180px 128px;
+    filter: drop-shadow(0 0 20px #61010152);
+    animation: q93demonmove 1s linear forwards;
+}
+
+@keyframes q93demonmove {
+    100% {
+        left: 120%;
+    }
+}
+
+.q93row {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.q93answer {
+    width: 128px;
+    height: 128px;
+    font-size: 60px;
+    font-family: "comic sans ms", sans-serif;
+    border: none;
+    background: linear-gradient(#830000, #520000);
+    color: #c40000;
+    text-shadow: 0 0 20px #c40000;
+    corner-shape: bevel;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #8a0000, inset 0 0 0 6px #690000;
+    transition: all 0.3s ease;
+}
+
+.q93answer:hover {
+    scale: 1.1;
+    background: linear-gradient(#a80000, #7c0000);
+    box-shadow: 0 0 20px #df000096, inset 0 0 0 6px #740000;
+    color: #4e0000;
+    font-weight: bolder;
+}
+
+.q93answer:active {
+    border-radius: 20px;
+    translate: 0 5px;
+    color: #ff0000;
+    background: linear-gradient(#2c0000, #4d0000);
+    box-shadow: 0 0 20px #6e000096, inset 0 0 0 6px #b80000;
+}
+
+#q95 {
+    display: none;
+}
+
+.q95bg {
+    position: fixed;
+    inset: 0;
+    background-image: url("/imgs/q95/bg.png");
+    z-index: -3;
+}
+
+.q95player {
+    position: fixed;
+    width: 53px;
+    height: 48px;
+    background-image: url("/imgs/q95/player.gif");
+    background-size: 53px 48px;
+    top: 46%;
+    left: 10%;
+    z-index: -2;
+    transition: scale 0.3s ease;
+    filter: drop-shadow(0 0 20px #5f0000) brightness(150%);
+}
+
+.q95obstacle {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    background-image:
+        radial-gradient(#800000d3, #3f0000b4),
+        url("/imgs/q95/rock.png");
+    z-index: -1;
+    background-attachment: fixed;
+    box-shadow: 0 0 60px #6401015b;
+}
+
+.q95obstacle.rtl,
+.q95obstacle.ltr {
+    background-image: linear-gradient(#00000000, #00000000), url("/imgs/q95/spikeblock.png");
+    background-size: 100px 120px;
+    filter: drop-shadow(0 0 60px #5e0000);
+}
+
+.q95obstacle.rtl {
+    animation: q95obsrtl 0.9s linear infinite alternate;
+}
+
+.q95obstacle.ltr {
+    animation: q95obsltr 0.9s linear infinite alternate;
+}
+
+@keyframes q95obsrtl {
+    100% {
+        translate: 230px 0;
+    }
+}
+
+@keyframes q95obsltr {
+    100% {
+        translate: -230px 0;
+    }
+}
+
+.q95coin {
+    position: fixed;
+    width: 42px;
+    height: 42px;
+    background-image: url("/imgs/q95/coin.png");
+    background-size: 42px 42px;
+    filter: drop-shadow(0 0 30px #e23500);
+    animation: q95coinidle 1s linear infinite alternate;
+}
+
+.q95coin.firstcoin {
+    top: 83%;
+    left: 70%;
+}
+
+.q95coin.secondcoin {
+    top: 46%;
+    left: 5%;
+    display: none;
+    opacity: 0;
+    transition: all 0.3s ease;
+    transition-behavior: allow-discrete;
+}
+
+.q95coin.secondcoin.active {
+    opacity: 1;
+    display: block;
+}
+
+@starting-style {
+    .q95coin.secondcoin.active {
+        opacity: 0;
+    }
+}
+
+.q95coin.gone {
+    animation: q95coingone 0.5s ease forwards;
+}
+
+@keyframes q95coingone {
+    100% {
+        translate: 0 -100px;
+        scale: 0;
+        rotate: 360deg;
+        opacity: 0;
+    }
+}
+
+@keyframes q95coinidle {
+    100% {
+        scale: -1 1;
+    }
+}
+
+.q96overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(#1d00008c, #2b00008c);
+    z-index: -9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.q96overlay h1 {
+    margin: 0;
+}
+
+.q96overlay.active {
+    opacity: 1;
+    pointer-events: all;
+    z-index: 9999;
+}
+
+.q96overlaytext1 {
+    font-size: 40px;
+    color: #c50000;
+    text-shadow: 0 0 60px #c70606;
+}
+
+.q96overlaytext2 {
+    font-size: 100px;
+    color: #ff0000;
+    text-shadow: 0 0 30px #ff0000;
+}
+
+.q98i:hover {
+    cursor: url("/imgs/cvariants/grabby_finale.png"), auto;
+    background-color: #ff7839;
+    background-image: linear-gradient(#530303, #1f0000);
+    opacity: 0.8;
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #7200006c;
+}
+
+.q98i:active {
+    cursor: url("/imgs/cvariants/grabby_finale.png"), auto;
+    background-color: #ff7839;
+    background-image: linear-gradient(#c00000, #b40000);
+    opacity: 0.8;
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #ff000088;
+}
+
+#q98 {
+    display: none;
+}
+
+.q98row {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.q98eye {
+    width: 150px;
+    height: 150px;
+    background-image: url("/imgs/q98/eye.png");
+    background-size: 150px 150px;
+    filter: drop-shadow(0 0 60px #500000);
+    cursor: url("/imgs/cvariants/grabby_finale.png"), auto;
+    z-index: 80;
+}
+
+.q98eye:hover {
+    background-image: url("/imgs/q98/eye_unamused.png");
+}
+
+.q98eye:active {
+    background-image: url("/imgs/q98/eye.png");
+    filter: saturate(150%);
 }

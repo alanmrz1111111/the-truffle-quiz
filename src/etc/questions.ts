@@ -380,54 +380,30 @@ export const questions: Question[] = [
         onQuestion() { },
     },
     {
-        content: `<h1 style="font-size: 60px;" id="qtxt">WATCH OUT!</h1>`,
-        moveText: {
-            duration: 0.5,
-            delay: 1000,
-            easing: "linear"
-        },
-        async onQuestion() {
-            const catchables = ["pipsqueak", "truffle", "carrot"]
-            const imgs = {
-                pipsqueak: "/imgs/pipsqueak01.png",
-                truffle: "/imgs/truffle01.png",
-                carrot: "/imgs/carrot01.png"
-            }
-
-            await wait(1000)
-
-            async function question() {
-                await wait(500)
-
-                let toCatch = catchables[random(0, catchables.length)]
-
-                const img = create("img") as HTMLImageElement
-
-                img.classList.add("flyingimage", toCatch)
-
-                // @ts-ignore
-                img.src = imgs[toCatch]
-                img.draggable = false;
-
-                append(img)
-
-                img.addEventListener("animationend", () => {
-                    if (state.gameOver) return;
-
-                    onWrongAns()
-                    question()
-                })
-
-                img.addEventListener("click", () => {
-                    onCorrectAns()
-                    img.remove()
-
-                    state.ignoreInput = true;
-                })
-            }
-
-            question()
-        },
+        content: `<h1 style="font-size: 80px;">SAY THE TRUTH.</h1>`,
+        answers: [
+            {
+                text: "YOU ARE UGLY",
+                correct: false,
+                fontSize: 45
+            },
+            {
+                text: "WE ARE UGLY",
+                correct: false,
+                fontSize: 45
+            },
+            {
+                text: "I AM UGLY",
+                correct: true,
+                fontSize: 50
+            },
+            {
+                text: "WE ARE ALL BEAUTIFUL!",
+                correct: false,
+                fontSize: 38
+            },
+        ],
+        onQuestion() { },
     },
     {
         content: `<h1 style="font-size: 50px;">WHICH OF THE FOLLOWING <p> IS NOT A FILE FORMAT?</h1>`,
@@ -456,10 +432,7 @@ export const questions: Question[] = [
                 fontSize: 60
             },
         ],
-        async onQuestion() {
-            await wait(500)
-            state.ignoreInput = false;
-        },
+        onQuestion() { },
     },
     {
         content: `<h1 style="font-size: 50px;">WHATS THE NAME OF <p> TRUFFLE'S UNCLE?</h1>`,
@@ -1079,7 +1052,7 @@ export const questions: Question[] = [
         ],
         onQuestion() {
             const something = createObjectOnPosB({
-                pos: { x: 50, y: 90 },
+                pos: { x: 50, y: 88 },
                 usePercentages: true,
                 selector: "h1"
             })
@@ -1432,6 +1405,8 @@ export const questions: Question[] = [
                     }
                 }
 
+                el.id = img.replace(".png", "")
+
                 append(el)
 
                 objs.push(el)
@@ -1495,6 +1470,17 @@ export const questions: Question[] = [
 
                             mouthOpen = false;
 
+                            particles({
+                                pos: { x: 25, y: 59 },
+                                count: 15,
+                                size: { width: 8, height: 8 },
+                                color: "rgba(255, 0, 0, 0.55)",
+                                gravity: 1,
+                                velocity: { min: 1, max: 3 },
+                                duration: 500,
+                                usePercentages: true
+                            });
+
                             continue;
                         }
 
@@ -1502,7 +1488,25 @@ export const questions: Question[] = [
 
                         playAudio({ id: "munch" })
 
+                        const colors = {
+                            cookie: "rgba(255, 153, 0, 0.55)",
+                            pizza: "rgba(255, 217, 0, 0.55)",
+                            carrot: "rgba(255, 94, 0, 0.56)"
+                        }
+
                         foodEaten++;
+
+                        particles({
+                            pos: { x: 25, y: 59 },
+                            count: 5,
+                            size: { width: 8, height: 8 },
+                            // @ts-ignore
+                            color: colors[obj.id],
+                            gravity: 1,
+                            velocity: { min: 2, max: 4 },
+                            duration: 500,
+                            usePercentages: true
+                        });
 
                         if (foodEaten >= goal) {
                             onCorrectAns()
@@ -1616,7 +1620,7 @@ export const questions: Question[] = [
 
             const carrot = createObjectOnPosB({
                 pos: {
-                    x: 50,
+                    x: 10,
                     y: 50
                 },
                 usePercentages: true,
@@ -1630,9 +1634,10 @@ export const questions: Question[] = [
             function giveCarrot() {
                 getCarrot({
                     position: {
-                        x: window.innerWidth / 2,
-                        y: window.innerHeight / 2
+                        x: 10,
+                        y: 50
                     },
+                    usePercentages: true,
                     slot: 2
                 })
 
@@ -1748,7 +1753,9 @@ export const questions: Question[] = [
 
             hideBackground()
 
-            playAudio({ id: "wind" })
+            let windAudioObj: HTMLAudioElement | undefined
+
+            windAudioObj = playAudio({ id: "wind", getObject: true })
 
             document.body.style.background = "white"
 
@@ -1867,9 +1874,9 @@ export const questions: Question[] = [
                 }
 
                 if (keys.left) {
-                    car.style.rotate = "180deg"
+                    car.style.scale = "-1 1"
                 } else if (keys.right) {
-                    car.style.rotate = "0deg"
+                    car.style.scale = "1 1"
                 }
 
                 velX = Math.max(-maxSpeed, Math.min(maxSpeed, velX));
@@ -1881,19 +1888,20 @@ export const questions: Question[] = [
                 car.style.left = `${pos.x}px`;
                 car.style.top = `${pos.y}px`;
 
-                if (pos.x + car.offsetWidth > endpoint.getBoundingClientRect().left &&
-                    pos.x < endpoint.getBoundingClientRect().right &&
-                    pos.y + car.offsetHeight > endpoint.getBoundingClientRect().top &&
-                    pos.y < endpoint.getBoundingClientRect().bottom) {
+                const endPointRect = endpoint.getBoundingClientRect()
+                const playerRect = car.getBoundingClientRect()
+
+                if (aabb(playerRect, endPointRect, 10)) {
                     onCorrectAns()
                     cancelAnimationFrame(rafId)
                     document.removeEventListener("keydown", onKeyPress);
                     document.removeEventListener("keyup", onKeyUp);
 
                     qsaHTML(".q47obs").forEach(obs => obs.remove())
-                    car.remove()
+                    car.remove()            
 
                     showBackground()
+                    windAudioObj?.pause()
 
                     document.body.style.background = "radial-gradient(ellipse, #ffc18e, #ffbc8f)"
                 }
@@ -1902,18 +1910,26 @@ export const questions: Question[] = [
                     if (!canLoseLife) return;
 
                     const obsRect = obstacle.getBoundingClientRect();
-                    const playerRect = car.getBoundingClientRect();
+                    const playerRect2 = car.getBoundingClientRect();
 
                     const margin = 13;
-                    const isColliding =
-                        playerRect.x < obsRect.x + obsRect.width - margin &&
-                        playerRect.x + playerRect.width > obsRect.x + margin &&
-                        playerRect.y < obsRect.y + obsRect.height - margin &&
-                        playerRect.y + playerRect.height > obsRect.y + margin;
 
-                    if (isColliding) {
+                    if (aabb(playerRect2, obsRect, margin)) {
                         canLoseLife = false;
                         onWrongAns();
+
+                        playAudio({ id: "ice" })
+
+                        particles({
+                            pos: { x: pos.x, y: pos.y },
+                            count: 5,
+                            size: { width: 8, height: 8 },
+                            color: "#3c8aff46",
+                            gravity: 0,
+                            velocity: { min: 1, max: 3 },
+                            duration: 500,
+                            usePercentages: false
+                        });
 
                         pos.y = initialCarRect.top;
                         pos.x = initialCarRect.left;
@@ -2265,6 +2281,7 @@ export const questions: Question[] = [
             let int1: number
             let goal = 12
             let demonsShot = 0;
+            let canLoseLife = true
 
             counter.textContent = `${demonsShot}/${goal}`
 
@@ -2309,6 +2326,19 @@ export const questions: Question[] = [
                 crosshair.style.top = `${e.clientY}px`
             }
 
+            function demonParticles(demonRect: DOMRect) {
+                particles({
+                    pos: { x: demonRect.x + 50, y: demonRect.y + 50 },
+                    count: 15,
+                    size: { width: 8, height: 8 },
+                    color: "rgba(255, 0, 0, 0.55)",
+                    gravity: 1,
+                    velocity: { min: 3, max: 8 },
+                    duration: 500,
+                    usePercentages: false
+                });
+            }
+
             function update() {
                 if (state.gameOver) {
                     cancelAnimationFrame(rafId)
@@ -2332,6 +2362,8 @@ export const questions: Question[] = [
                             updateCount();
                             demonEl.classList.add("hit");
                             demonsToRemove.push(demonEl);
+
+                            demonParticles(demonRect)
                             break;
                         }
                     }
@@ -2346,12 +2378,15 @@ export const questions: Question[] = [
                 });
             }
 
-            function updateCount() {
+            async function updateCount() {
                 demonsShot++;
                 counter.textContent = `${demonsShot}/${goal}`
 
                 if (demonsShot >= goal) {
                     gameStarted = false
+                    canLoseLife = false
+
+                    await wait(550)                    
 
                     onCorrectAns()
                     cancelAnimationFrame(rafId)
@@ -2397,7 +2432,7 @@ export const questions: Question[] = [
                     demonEls.splice(index, 1)
                     demonEl.remove()
 
-                    onWrongAns()
+                    if (canLoseLife) onWrongAns()
                 })
             }, 500);
 
@@ -2724,6 +2759,8 @@ export const questions: Question[] = [
             }
 
             function onRedLetter() {
+                onWrongAns()
+
                 if (collected < 1) {
                     playAudio({ id: "fart" })
                     return
@@ -2793,6 +2830,29 @@ export const questions: Question[] = [
                 cont.append(el)
 
                 letters.push(el)
+
+                const rect = el.getBoundingClientRect()
+                
+                let particleColor = "rgba(255, 0, 0, 0.29)"
+
+                if (selectedVariant == "green") {
+                    particleColor = "rgba(21, 255, 0, 0.27)"
+                } else if (selectedVariant == "normal") {
+                    particleColor = "rgba(150, 150, 150, 0.42)"
+                } else if (selectedVariant == "blue") {
+                    particleColor = "rgba(0, 68, 255, 0.27)"
+                }
+
+                particles({
+                    pos: { x: rect.x, y: rect.y },
+                    count: 5,
+                    size: { width: 8, height: 8 },
+                    color: particleColor,
+                    gravity: 0,
+                    velocity: { min: 1, max: 3 },
+                    duration: 500,
+                    usePercentages: false
+                });
             }, 500);
 
             update()
@@ -3211,7 +3271,7 @@ export const questions: Question[] = [
             },
             {
                 text: "DIGESTIVES",
-                correct: true,
+                correct: false,
                 fontSize: 50
             },
         ],
@@ -3291,7 +3351,7 @@ export const questions: Question[] = [
 
                     playAudio({ id: "munch" })
 
-                    earth.classList.add("gone")
+                    earth.classList.add("egone")
 
                     setTimeout(() => {
                         onWrongAns()
@@ -3385,7 +3445,7 @@ export const questions: Question[] = [
                     })
 
                     bomb.classList.add("boom")
-                    earth.classList.add("gone")
+                    earth.classList.add("egone")
 
                     playAudio({ id: "bigBoom" })
 
@@ -3439,13 +3499,13 @@ export const questions: Question[] = [
 
                     playAudio({ id: "munch" })
 
-                    earth.classList.add("gone")
+                    earth.classList.add("egone")
 
                     herbert.classList.add("mouthclosed")
 
                     setTimeout(() => {
                         onWrongAns()
-                    }, 500);
+                    }, 1000);
                 })
             }
         }
@@ -3863,7 +3923,7 @@ export const questions: Question[] = [
                     color: "rgba(119, 119, 119, 0.55)",
                     gravity: 1,
                     velocity: { min: 1, max: 3 },
-                    duration: 500
+                    duration: 500,
                 });
             }
 
@@ -4079,7 +4139,7 @@ export const questions: Question[] = [
         },
         bomb: {
             delay: 3000,
-            duration: 6
+            duration: 10
         },
         oneChance: true,
         async onQuestion() {
@@ -4397,7 +4457,7 @@ export const questions: Question[] = [
     {
         content: `<h1 style="font-size: 60px;">ALL YOU NEED TO <p> DO IS PRESS TAB.</h1>`,
         bomb: {
-            duration: 5
+            duration: 10
         },
         answers: [
             {
@@ -4425,7 +4485,7 @@ export const questions: Question[] = [
             setQuestionAreaPointerEventState("all")
             const overlay = querySelectorHTML(".q96overlay")
 
-            await wait(4000)
+            await wait(9000)
 
             clearBombInterval()
 
@@ -4681,8 +4741,16 @@ export const questions: Question[] = [
                 // @ts-ignore
                 btn.dataset.correct = `false`
 
-                btn.textContent = `${possibleAnswers[qIndex][i].text}`
-                btn.style.fontSize = `${possibleAnswers[qIndex][i].fontSize}px`
+                const span = create("span")
+                const prevSpan = btn.querySelector("span")
+
+                if (prevSpan) prevSpan.remove()
+
+                span.textContent = `${possibleAnswers[qIndex][i].text}`
+                span.style.fontSize = `${possibleAnswers[qIndex][i].fontSize}px`
+
+                btn.appendChild(span)
+
                 btn.dataset.correct = `${possibleAnswers[qIndex][i].correct}`
             })
         }

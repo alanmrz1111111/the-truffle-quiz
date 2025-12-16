@@ -44,7 +44,7 @@ export function playAudio(args: PlayAudioArgs) {
     if (args.getObject) return audio;
 }
 
-export function playLoopingAudio({ audioID, audioDuration, intervalCb }: { audioID: string, audioDuration: number, intervalCb?: () => void }) {
+export function playLoopingAudio({ audioID, audioDuration, intervalCb }: { audioID: string, audioDuration: number, intervalCb?: (audioObj: HTMLAudioElement) => void }) {
     if (!list) return
 
     const obj = list.find(aobj => aobj.id == audioID);
@@ -56,7 +56,9 @@ export function playLoopingAudio({ audioID, audioDuration, intervalCb }: { audio
     const int = setInterval(() => {
         audioObj = playAudio({ id: obj.id, getObject: true })
         document.dispatchEvent(audioIterationEvent)
-        intervalCb?.()
+        intervalCb?.(audioObj!)
+
+        console.log("Audio iteration for audio with ID " + audioID + " finished")
     }, audioDuration);
 
     audioElList.push(audioObj!)

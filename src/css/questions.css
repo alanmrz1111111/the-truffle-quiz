@@ -30,9 +30,19 @@
     top: 70%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: monospace;
+    font-family: "comic sans ms", sans-serif;
     font-size: 35px;
-    color: white;
+    background-color: #5739ff;
+    background-image: linear-gradient(#cc4aff, #815eff);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #6e4dff6c;
+    font-weight: bolder;
+    pointer-events: none;
 }
 
 .q9img1,
@@ -83,6 +93,7 @@
 
 #q18>img:hover {
     opacity: 0.8;
+    cursor: url("/imgs/grabby.png"), auto;
 }
 
 #q18 {
@@ -224,6 +235,7 @@
 .q27pill02:hover,
 .q27pill01:hover {
     opacity: 0.7;
+    cursor: url("/imgs/grabby.png"), auto;
 }
 
 #q28 {
@@ -243,6 +255,7 @@
     transform: translateX(-70%) scaleY(1.2);
     height: 600px;
     filter: saturate(150%);
+    cursor: url("/imgs/grabby.png"), auto;
 }
 
 .q28neurons:active {
@@ -416,7 +429,7 @@
 
 .q41text {
     position: fixed;
-    font-family: monospace;
+    font-family: "comic sans ms", sans-serif;
     font-size: 45px;
     font-weight: bold;
     top: 0;
@@ -522,7 +535,7 @@
     inset: 0;
     background-image: url("/imgs/q47/bg.png");
     z-index: 20;
-    opacity: 0.67;
+    opacity: 0.7;
 }
 
 .q47bg2 {
@@ -539,10 +552,11 @@
     left: 10%;
     width: 48px;
     height: 48px;
-    background-image: url("/imgs/q47/penguin.png");
+    background-image: url("/imgs/q47/player.gif");
     background-repeat: no-repeat;
-    background-size: 50px;
-    filter: drop-shadow(0 0 40px #3c8aff);
+    background-size: 48px;
+    filter: drop-shadow(0 0 20px #1c77ff);
+    transition: scale 0.08s ease;
 }
 
 .q47endpoint {
@@ -570,9 +584,9 @@
 .q47obs {
     position: absolute;
     z-index: -10;
-    background: linear-gradient(#3c8aff, #006eff, #5297ff, #60a0ff);
+    background: linear-gradient(#3c8aff, #006eff, #5297ff, #60a0ff, #5372ff);
     opacity: 0.6;
-    box-shadow: 0 0 40px #3c8aff;
+    box-shadow: 0 0 40px #0066ff;
 }
 
 #q55 {
@@ -800,7 +814,7 @@
     top: 0;
     right: 0;
     margin: 20px;
-    font-family: monospace;
+    font-family: "comic sans ms", sans-serif;
     font-size: 40px;
     font-weight: bolder;
     z-index: 9999;
@@ -1210,7 +1224,7 @@
     transition: all 0.3s ease;
 }
 
-.q75earth.gone {
+.q75earth.egone {
     transform: translate(-50%, -50%) scale(0) rotate(360deg);
     opacity: 0;
 }
@@ -1230,7 +1244,7 @@
 }
 
 .q75herbert.gliding {
-    animation: q75herbertglide 2s linear forwards;
+    animation: q75herbertglide 1s linear forwards;
 }
 
 .q75herbert.dead {
@@ -1529,7 +1543,7 @@
     top: 60%;
     left: 49%;
     font-size: 42px;
-    font-family: monospace;
+    font-family: "comic sans ms", sans-serif;
     background-color: #5739ff;
     background-image: linear-gradient(#cc4aff, #815eff);
     background-size: 100%;
@@ -1674,7 +1688,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 30px;
 }
 
 .q93answer {
@@ -1690,6 +1704,25 @@
     border-radius: 15px;
     box-shadow: 0 0 20px #8a0000, inset 0 0 0 6px #690000;
     transition: all 0.3s ease;
+    position: relative;
+    rotate: 5deg;
+}
+
+.q93answer:nth-child(2n) {
+    rotate: -5deg;
+}
+
+.q93answer::before {
+    content: "";
+    width: 15px;
+    height: 1000px;
+    position: absolute;
+    background: red;
+    top: 126px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(#830000, #520000);
+    box-shadow: 0 0 20px #8a0000, inset 0 0 0 3px #690000;
 }
 
 .q93answer:hover {
@@ -1700,12 +1733,22 @@
     font-weight: bolder;
 }
 
+.q93answer:hover::before {
+    background: linear-gradient(#a80000, #7c0000);
+    box-shadow: 0 0 20px #df000096, inset 0 0 0 3px #740000;
+}
+
 .q93answer:active {
     border-radius: 20px;
     translate: 0 5px;
     color: #ff0000;
     background: linear-gradient(#2c0000, #4d0000);
     box-shadow: 0 0 20px #6e000096, inset 0 0 0 6px #b80000;
+}
+
+.q93answer:active::before {
+    background: linear-gradient(#2c0000, #4d0000);
+    box-shadow: 0 0 20px #6e000096, inset 0 0 0 3px #b80000;
 }
 
 #q95 {

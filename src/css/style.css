@@ -757,7 +757,7 @@ body.finale button:hover {
 
 @keyframes livesdanger {
     100% {
-        scale: 1.4;
+        scale: 1.5;
         background-image: linear-gradient(#ff0800, #a33421);
     }
 }
@@ -827,11 +827,40 @@ body.finale button:hover {
     text-transform: capitalize;
 }
 
+.qbutton span {
+    background-color: #ff7839;
+    background-image: linear-gradient(#ffd8c8, #ffd3bf);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #ff854d6c;
+    font-weight: bold;
+    text-shadow: 0 0 20px #ff9271a9;
+    padding: 2px;
+}
+
 .qbutton.finale {
     background: linear-gradient(#8d1515, #b31e1e, #9b0d0d);
-    color: #610000;
+    background: linear-gradient(#8d1515, #b31e1e, #720101);
     text-shadow: 0 0 20px #741a1a;
     box-shadow: inset 0 0 0 6px #31000033;
+    border-radius: 10px;
+    corner-shape: scoop;
+}
+
+.qbutton.finale span {
+    background-image: linear-gradient(#850000, #380000);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #680000bb;
+    font-weight: 500;
 }
 
 .qbutton:hover {
@@ -841,11 +870,21 @@ body.finale button:hover {
     color: #ffc1b6;
 }
 
+.qbutton:hover span {
+    background-image: linear-gradient(#ffe1d8, #ff8888);
+    text-shadow: 0 0 20px #ff5e5354;
+}
+
 .qbutton.finale:hover {
     background: linear-gradient(#520909, #2b0504, #360101);
     scale: 0.99;
     box-shadow: 0 0 20px #47030369, inset 0 0 0 6px #8a00006c;
     color: #a80000;
+}
+
+.qbutton.finale:hover span {
+    background-image: linear-gradient(#3d0000, #bb0000);
+    text-shadow: 0 0 20px #ac0000bb;
 }
 
 .qbutton::before {
@@ -948,6 +987,11 @@ body.finale button:hover {
     transition: all 0.3s ease;
 }
 
+.qbutton:active span {
+    background-image: linear-gradient(#ffe6e3, #ff6161);
+    text-shadow: 0 0 20px #ff6161;
+}
+
 .qbutton.finale:active {
     scale: 1.03;
     background: linear-gradient(#300000, #270000, #8f0000);
@@ -956,6 +1000,11 @@ body.finale button:hover {
     color: #f11000;
     text-shadow: 0 0 20px #ff0000;
     transition: all 0.3s ease;
+}
+
+.qbutton.finale:active span {
+    background-image: linear-gradient(#920a00, #ff0000);
+    text-shadow: 0 0 15px red;
 }
 
 .container {
@@ -2173,6 +2222,7 @@ p {
     width: 200px;
     height: fit-content;
     margin-bottom: 12px;
+    z-index: 2;
 }
 
 .carrotslot {
@@ -2184,6 +2234,27 @@ p {
     animation: carrotslotidle 1s ease infinite alternate;
     cursor: url("/imgs/grabby.png"), auto;
     transition: all 0.3s ease;
+}
+
+.carrotslot.nope {
+    animation: carrotslotnope 0.3s ease alternate;
+}
+
+@keyframes carrotslotnope {
+    0% {
+        rotate: 5deg;
+        scale: 1.3 0.5;
+    }
+
+    50% {
+        rotate: 3deg;
+        scale: 0.8 1.3;
+    }
+
+    100% {
+        scale: 1 1;
+        rotate: 0deg;
+    }
 }
 
 .carrotslot.active {
@@ -2294,6 +2365,7 @@ p {
     opacity: 0;
     transition: all 0.5s ease;
     border-radius: 0;
+    cursor: none;
 }
 
 @property --gradientrot {
@@ -2398,9 +2470,12 @@ p {
     left: 50%;
     width: 100%;
     height: 50%;
-    animation: finalstatspageappear 0.5s ease forwards 10.5s;
     opacity: 0;
     transition: all 0.5s ease;
+}
+
+.finalstats.active {
+    animation: finalstatspageappear 0.5s ease forwards;
 }
 
 .finalstats.pagegone {
@@ -2492,7 +2567,10 @@ p {
     top: 130%;
     left: 50%;
     opacity: 0;
-    animation: endingcarrotappear 0.5s ease forwards 15.2s;
+}
+
+.endingcarrot.active {
+    animation: endingcarrotappear 0.5s ease forwards;
 }
 
 @keyframes endingcarrotappear {
@@ -2509,7 +2587,6 @@ p {
     left: 50%;
     transform: translate(-50%, -50%) scaleX(0.8);
     opacity: 0;
-    animation: tfptextappear 0.3s ease forwards 15.3s;
     font-size: 70px;
     width: 100%;
     text-align: center;
@@ -2523,6 +2600,10 @@ p {
     -moz-text-fill-color: transparent;
     text-shadow: 0 0 30px #00c3ff8c;
     -webkit-text-stroke: 1px #0059ff7c;
+}
+
+.thanksforplaying.active {
+    animation: tfptextappear 0.3s ease forwards;
 }
 
 @keyframes tfptextappear {
@@ -2541,6 +2622,7 @@ p {
     pointer-events: none;
     opacity: 0;
     transition: all 0.4s ease;
+    cursor: none;
 }
 
 .endtransitionoverlay.active {
@@ -2558,6 +2640,7 @@ p {
     background-size: 850px 600px;
     display: none;
     pointer-events: none;
+    cursor: none;
 }
 
 .postcreditsscene.active {

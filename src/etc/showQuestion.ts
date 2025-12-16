@@ -193,8 +193,18 @@ export async function showQuestion(questionNumber: number) {
         if (qst.answers) {
             btn.style.display = "grid"
 
-            btn.textContent = qst.answers[i].text
-            btn.style.fontSize = `${qst.answers[i].fontSize}px`;
+            const span = create("span")
+            const prevSpan = btn.querySelector("span")
+            
+            if (prevSpan) prevSpan.remove()
+
+            span.textContent = qst.answers[i].text
+            span.style.fontSize = `${qst.answers[i].fontSize}px`
+
+            btn.appendChild(span)
+
+            // btn.textContent = qst.answers[i].text
+            // btn.style.fontSize = `${qst.answers[i].fontSize}px`;
             btn.dataset.correct = `${qst.answers[i].correct}`
 
             /* i dont know why it sometimes does the slide appear anim. so just keep this */

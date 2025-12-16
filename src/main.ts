@@ -1,9 +1,6 @@
 // import { getCurrentWindow } from "@tauri-apps/api/window";
-import { Checkbox } from "./components/Checkbox";
-import { changeMusicVolume, changeSFXVolume, getAudioDuration, playAudio, playLoopingAudio, playRandomAudio, registerAudioList } from "./core/audio";
-import { lines } from "./core/characterLines";
+import { changeMusicVolume, changeSFXVolume, getAudioDuration, playAudio, playLoopingAudio, registerAudioList } from "./core/audio";
 import { setQualityLevel } from "./core/graphics";
-import { particles } from "./core/particles";
 import { closeCurrentPopup, popup } from "./core/popup";
 import { MUSIC_VOLUME, SFX_VOLUME, state } from "./core/state";
 import { transition } from "./core/transition";
@@ -15,20 +12,21 @@ import { clearBombInterval, showQuestion } from "./etc/showQuestion";
 import { spookyLines } from "./etc/spookyLines";
 import { seq1, seq2, seq3, seq4, seq5 } from "./etc/startSequences";
 import { trackFPS } from "./etc/trackFPS";
-import { getCarrot } from "./powerups";
-import { append, create, createBoom, createObjectOnPos, forceReflow, qsaHTML, querySelectorHTML, randFloat, random, showObjectWithBounce, wait } from "./utils";
+import { createBoom, createObjectOnPos, qsaHTML, querySelectorHTML, random, showObjectWithBounce, wait } from "./utils";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { window } from "@tauri-apps/api"
 
 if ("scrollRestoration" in history) {
     history.scrollRestoration = "manual"
 }
 
 registerAudioList(audioList)
-customElements.define("c-checkbox", Checkbox)
+// customElements.define("c-checkbox", Checkbox)
 
 trackFPS()
 
-// const tauriWindow = getCurrentWindow()
+const tauriWindow = window.getCurrentWindow()
+tauriWindow.setMaximizable(false)
 
 export const mousePos = { x: 0, y: 0 }
 
@@ -43,6 +41,14 @@ const toggleBtns = qsaHTML("[data-btn-bh='toggle']")
 const settingBtns = qsaHTML(".settingbutton")
 
 document.addEventListener("contextmenu", (e) => e.preventDefault())
+
+document.addEventListener("keydown", (e) => {
+    if (!state.inMainMenu) return
+
+    if (e.key == "Escape") confirmExitAction()
+
+    if (e.key == "p") onPlay()
+})
 
 document.addEventListener("mousemove", (e) => {
     mousePos.x = e.pageX
@@ -77,10 +83,6 @@ document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key == "o") {
         state.questionNumber = 89
         showQuestion(state.questionNumber)
-    }
-
-    if (e.key == "p") {
-        onStats()
     }
 
     // if (e.key == "p") getCarrot({ position: { x: 160, y: 160 }, slot: 1 })
@@ -275,6 +277,8 @@ async function theEnd() {
     const statspage = querySelectorHTML(".finalstats")
     const endtransition = querySelectorHTML(".endtransitionoverlay")
     const cont = querySelectorHTML(".container")
+    const thanksForPlayingText = querySelectorHTML(".thanksforplaying")
+    const endingCarrot = querySelectorHTML(".endingcarrot")
 
     overlay.classList.add("active")
     qring.classList.add("fly")
@@ -287,11 +291,16 @@ async function theEnd() {
     truffle.classList.add("gone")
     winnertext.classList.add("gone")
 
-    // 5000
-    await wait(5000)
-    statspage.classList.add("pagegone")
+    await wait(500)
+    statspage.classList.add("active")
 
     // 10000
+    await wait(10000)
+    statspage.classList.remove("active")
+
+    thanksForPlayingText.classList.add("active")
+    endingCarrot.classList.add("active")
+
     await wait(10000)
     endtransition.classList.add("active")
     cont.remove()
@@ -363,7 +372,7 @@ async function postCreditsScene() {
         localStorage.setItem("menuOnReload", "false")
         localStorage.setItem("completed", "true")
 
-        window.location.reload()
+        location.reload()
     }, 450);
 }
 
@@ -414,7 +423,7 @@ function cacheClearedPopup() {
             {
                 text: "RESTART",
                 onClick() {
-                    window.location.reload()
+                    location.reload()
                 },
             },
         ],
@@ -504,7 +513,7 @@ async function hideSecondaryMenuScreen() {
     const logo = querySelectorHTML(".logo")
     const qotdcont = querySelectorHTML(".qotdcont")
 
-    playAudio({ id: "menuclick" })
+    playAudio({ id: "glass" })
     setMainMenuVisibilityState(true)
 
     menugrid.classList.remove("fly")
@@ -535,7 +544,7 @@ async function showSecondaryMenuScreen() {
     const logo = querySelectorHTML(".logo")
     const qotdcont = querySelectorHTML(".qotdcont")
 
-    playAudio({ id: "menuclick" })
+    playAudio({ id: "glass" })
     menuFly()
 
     await wait(300)
@@ -702,7 +711,7 @@ async function onGiveUp() {
 
     await wait(350)
 
-    window.location.reload()
+    location.reload()
 }
 
 async function tryAgain() {
@@ -717,7 +726,7 @@ async function tryAgain() {
 
     await wait(350)
 
-    window.location.reload()
+    location.reload()
 }
 
 function init() {
@@ -793,7 +802,7 @@ function confirmExitAction() {
             {
                 text: "yep",
                 onClick() {
-                    // tauriWindow.close()
+                    tauriWindow.close()
                 },
             },
             {
@@ -844,7 +853,7 @@ export function cheaterPopup() {
             {
                 text: "TRY AGAIN",
                 onClick() {
-                    window.location.reload()
+                    location.reload()
                 },
             }
         ],
@@ -995,6 +1004,7 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
     clearBombInterval()
     playAudio({ id: "gameover" })
     pauseMusic()
+    pauseFinaleMusic()
 
     let effectCount = 3;
 
@@ -1064,7 +1074,13 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
     })
 }
 
+function pauseFinaleMusic() {
+    removeTrackFromActiveTracksList("finalebgm")
+    finaleAudioObj?.pause()
+}
+
 function pauseMusic() {
+    removeTrackFromActiveTracksList("gamebgm")
     gameAudioObj?.pause()
 }
 
@@ -1192,6 +1208,15 @@ async function onPlay() {
     const creditsBtn = querySelectorHTML(".copyrightbtn")
 
     creditsBtn.style.display = "none"
+
+    await wait(1000)
+    checkIfMenuBGMOverlapsWithGameBGM()
+}
+
+function checkIfMenuBGMOverlapsWithGameBGM() {
+    if (state.tracksPlaying.includes("menubgm")) {
+        mainMenuAudioObj?.pause()
+    }
 }
 
 async function showMainMenu() {
@@ -1264,6 +1289,7 @@ export async function manageGameFinale() {
 
     if (bottomrightrow) bottomrightrow.remove()
 
+    // @ts-ignore
     document.body.style = ""
     state.finale = true
 
@@ -1313,9 +1339,14 @@ export async function manageGameFinale() {
 async function manageGameBGM() {
     const duration = await getAudioDuration({ filePath: "/audio/bgm/game01.mp3" })
 
+    addTrackToActiveTracksList("gamebgm")
+
     const obj = playLoopingAudio({
         audioID: "gamebgm01",
-        audioDuration: duration
+        audioDuration: duration,
+        intervalCb(newAudioObj) {
+            gameAudioObj = newAudioObj
+        },
     })
 
     gameAudioObj = obj!.audioObj;
@@ -1325,9 +1356,14 @@ async function manageGameBGM() {
 export async function manageFinaleBGM() {
     const duration = 338000
 
+    addTrackToActiveTracksList("finalebgm")
+
     const obj = playLoopingAudio({
         audioID: "finalebgm",
-        audioDuration: duration
+        audioDuration: duration,
+        intervalCb(newAudioObj) {
+            finaleAudioObj = newAudioObj
+        },
     })
 
     finaleAudioObj = obj!.audioObj;
@@ -1338,16 +1374,31 @@ async function manageMenuBGM() {
 
     const duration = await getAudioDuration({ filePath: "/audio/bgm/menu01.mp3" })
 
+    addTrackToActiveTracksList("menubgm")
+
     const obj = playLoopingAudio({
         audioID: "menubgm01",
         audioDuration: duration,
-        intervalCb() {
-            mainMenuAudioObj = obj!.audioObj;
+        intervalCb(newAudioObj) {
+            mainMenuAudioObj = newAudioObj;
         },
     })
 
     mainMenuAudioObj = obj!.audioObj;
     mainMenuAudioInt = obj!.int;
+}
+
+function removeTrackFromActiveTracksList(trackID: string) {
+    state.tracksPlaying.splice(state.tracksPlaying.indexOf(trackID), 1)
+
+    console.log("removed track. list:", state.tracksPlaying)
+}
+
+function addTrackToActiveTracksList(trackID: string) {
+    state.tracksPlaying.splice(state.tracksPlaying.indexOf(trackID), 1)
+    state.tracksPlaying.push(trackID)
+
+    console.log("added new track. list:", state.tracksPlaying)
 }
 
 async function littleBouncingThings() {

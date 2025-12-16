@@ -23,7 +23,7 @@ export function particles({
     gravity = 0.1,
     duration = 1000,
     usePercentages = false,
-    cssLine = ""
+    cssLine = "",
 }: ParticleOptions) {
     if (state.quality == QualityLevel.LOW) return
 
@@ -62,18 +62,23 @@ export function particles({
         let vx = Math.cos(angle) * speed;
         let vy = Math.sin(angle) * speed;
 
-        let x = 0 
+        let x = 0
         let y = 0;
         let life = duration;
 
         function update() {
             if (life <= 0) {
-                particleEl.remove();
-                alive--;
-                if (alive === 0) cont.remove();
-                return;
+                particleEl.style.opacity = "0"
+
+                setTimeout(() => {
+                    particleEl.remove();
+
+                    alive--;
+                    if (alive === 0) cont.remove();
+                    return;
+                }, 150);
             }
-            
+
             x += vx;
             y += vy;
             vy += gravity;

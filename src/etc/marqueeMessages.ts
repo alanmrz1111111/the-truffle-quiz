@@ -12,5 +12,5 @@ export const mqmessages = [
     "9.8/10 on IMDB!",
     "if (answer == 'truffle') onCorrectAns()",
     "PLAY ASK TRUFFLE!!!",
-    "CAN YOU CATCH ALL THE CARROTS?"
+    "CAN YOU CATCH ALL THE CARROTS?",
 ]

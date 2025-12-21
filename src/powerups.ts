@@ -75,15 +75,23 @@ export async function getCarrot({ position, slot, usePercentages = false }: Carr
     const slotEl = querySelectorHTML(`.carrotslot[data-cslot='${slot}']`)
 
     slotEl.setAttribute("populated", "true")
+
     slotEl.classList.add("active")
 
     const slotRect = slotEl.getBoundingClientRect()
+    let color = "#ff8827ff"
+
+    if (state.currentColorPalette == "allwhite") {
+        color = "#ffffff62"
+    } else if (state.currentColorPalette == "darkpurple") {
+        color = "#37006bc0"
+    }
 
     particles({
         pos: { x: slotRect.x + 15, y: slotRect.y + 15 },
         count: 4,
         size: { width: 8, height: 8 },
-        color: "#ff8827ff",
+        color,
         gravity: 0,
         velocity: { min: 1, max: 2 },
         duration: 500,
@@ -92,7 +100,7 @@ export async function getCarrot({ position, slot, usePercentages = false }: Carr
     });
 }
 
-export function destroyBomb(slotEl: HTMLElement) {
+export async function destroyBomb(slotEl: HTMLElement) {
     if (!state.canUseCarrot) {
         playAudio({ id: "nope" })
 
@@ -105,6 +113,74 @@ export function destroyBomb(slotEl: HTMLElement) {
     }
 
     clearBombInterval()
+
+    slotEl.setAttribute("populated", "false")
+    slotEl.classList.remove("active")
+
+    if (state.currentColorPalette == "allwhite") {
+        slotEl.classList.add("allwhite")
+    }
+
+    const carrotEffect = create("div")
+    const zap = create("div")
+    const bombEl = querySelectorHTML(".bomb")
+    const overlay = querySelectorHTML(".carrotattackoverlay")
+
+    bombEl.classList.add("obliterated")
+
+    overlay.classList.add("active")
+    zap.classList.add("carrotzap")
+    carrotEffect.classList.add("carrotEffect")
+
+    document.body.append(carrotEffect)
+    document.body.append(zap)
+
+    playAudio({ id: "pop01" })
+
+    await wait(700)
+
+    zap.classList.add("active")
+    bombEl.style.cssText += `
+        animation: bombsuffer 0.3s ease infinite alternate;
+        scale: 1;
+    `
+
+    carrotEffect.classList.add("insane")
+
+    playAudio({ id: "zap" })
+
+    document.body.classList.add("impact")
+
+    setTimeout(() => {
+        document.body.classList.remove("impact")
+    }, 16);
+
+    await wait(2000)
+
+    bombEl.style.opacity = "0"
+    bombEl.style.animation = "none"
+
+    particles({
+        pos: { x: 90, y: 13 },
+        count: 15,
+        size: { width: 8, height: 8 },
+        color: "#b626d3ff",
+        gravity: 1,
+        velocity: { min: 2, max: 2 },
+        duration: 2000,
+        usePercentages: true,
+        cssLine: "z-index: 1;"
+    });
+
+    carrotEffect.classList.remove("insane")
+    carrotEffect.classList.add("cgone")
+    overlay.classList.remove("active")
+
+    carrotEffect.addEventListener("animationend", carrotEffect.remove)
+    zap.remove()
+
+    bombEl.classList.remove("obliterated")
+
     createBoom({
         x: 92,
         y: 12,
@@ -113,13 +189,28 @@ export function destroyBomb(slotEl: HTMLElement) {
         height: 100
     })
 
-    const bombEl = querySelectorHTML(".bomb")
-
-    bombEl.style.opacity = "0"
-
-    playAudio({ id: "pop01" })
     playAudio({ id: "bigBoom" })
+}
 
-    slotEl.setAttribute("populated", "false")
-    slotEl.classList.remove("active")
+export function setCarrotPowerupColor(color: "normal" | "allwhite" | "darkpurple") {
+    carrotSlots.forEach(slot => {
+        if (color == "allwhite") {
+            if (slot.getAttribute("populated") == "true") {
+                slot.classList.add("allwhitepop");
+                slot.style.filter = "drop-shadow(0 0 20px #ffffff57)"
+            } else {
+                slot.classList.add("allwhite");
+                slot.style.filter = "brightness(0) invert(1) drop-shadow(0 0 20px #ffffff57)"
+            }
+        } else if (color == "normal") {
+            slot.classList.remove("allwhitepop")
+            slot.classList.remove("allwhite")
+            slot.style.filter = "drop-shadow(0 0 20px #ff7b469c)"
+
+            /* const row = querySelectorHTML(".bottomrightrow")
+            row.style.filter = "none" */
+        } else if (color == "darkpurple") {
+            slot.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5) drop-shadow(0 0 20px #8022a5ff)"
+        }
+    })
 }

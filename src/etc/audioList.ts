@@ -356,4 +356,16 @@ export const audioList: AudioObject[] = [
         id: "nope",
         bus: "sfx"
     },
+    {
+        src: "/audio/random01.mp3",
+        volume: state.volume.sfx,
+        id: "random01",
+        bus: "sfx"
+    },
+    {
+        src: "/audio/zap.mp3",
+        volume: state.volume.sfx + 0.2,
+        id: "zap",
+        bus: "sfx"
+    },
 ]

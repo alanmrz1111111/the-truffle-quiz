@@ -40,17 +40,17 @@ export const questions: Question[] = [
             {
                 text: "you don't!",
                 correct: false,
-                fontSize: 50
+                fontSize: 53
             },
             {
                 text: "use 3 tablespoons of vinegar",
                 correct: false,
-                fontSize: 30
+                fontSize: 32
             },
             {
                 text: "CHEMISTRY!!!",
                 correct: false,
-                fontSize: 40
+                fontSize: 47
             },
             {
                 text: "use your boarding card",
@@ -66,7 +66,7 @@ export const questions: Question[] = [
             {
                 text: "CATNAP HIM",
                 correct: true,
-                fontSize: 45
+                fontSize: 50
             },
             {
                 text: "that's animal abuse!",
@@ -76,7 +76,7 @@ export const questions: Question[] = [
             {
                 text: "Shoot him",
                 correct: false,
-                fontSize: 45
+                fontSize: 50
             },
             {
                 text: "place him in a large box",
@@ -115,6 +115,8 @@ export const questions: Question[] = [
             img.addEventListener("click", giveCarrot)
 
             async function key(e: KeyboardEvent) {
+                if (state.gameOver) return;
+                
                 let ignore = false
                 const targetWord = ["h", "e", "l", "l", "o"]
 
@@ -1073,7 +1075,7 @@ export const questions: Question[] = [
         },
     },
     {
-        content: `<h1 style="font-size: 45px;">WHEN IS THE LABUBU <p> MOVIE COMING OUT?</h1>`,
+        content: `<h1 style="font-size: 52px;">WHEN IS THE LABUBU <p> MOVIE COMING OUT?</h1>`,
         answers: [
             {
                 text: "DECEMBER 16TH, 2029",
@@ -1108,11 +1110,14 @@ export const questions: Question[] = [
             const iconRect = icon.getBoundingClientRect();
             const spikes = qsaHTML(".spikes")
 
+            setQuestionAreaPointerEventState("none")
+
             let pos = { x: iconRect.left, y: iconRect.top };
             let vel = { x: 0, y: 0 };
 
+            // 6
             const moveSpeed = 6;
-            const jumpVelocity = -13;
+            const jumpVelocity = -13.5;
             const gravity = 0.5;
 
             let isJumping = false;
@@ -1189,6 +1194,10 @@ export const questions: Question[] = [
                     isJumping = true;
 
                     icon.classList.add("jumping")
+
+                    setTimeout(() => {
+                        icon.classList.remove("jumping")
+                    }, 1000);
                 }
             });
         },
@@ -1217,7 +1226,9 @@ export const questions: Question[] = [
                 fontSize: 50
             },
         ],
-        onQuestion() { },
+        onQuestion() {
+            setQuestionAreaPointerEventState("all")
+        },
     },
     {
         content: `<h1 style="font-size: 45px;">WHAT IS THE NAME <p> OF THIS GAME'S MASCOT?</h1>`,
@@ -1467,7 +1478,7 @@ export const questions: Question[] = [
                             playAudio({ id: "ow" })
 
                             herbert.classList.remove("mouthopen")
-
+                            canLoseLife = false
                             mouthOpen = false;
 
                             particles({
@@ -1480,6 +1491,10 @@ export const questions: Question[] = [
                                 duration: 500,
                                 usePercentages: true
                             });
+
+                            setTimeout(() => {
+                                canLoseLife = true
+                            }, 1500);
 
                             continue;
                         }
@@ -3644,7 +3659,7 @@ export const questions: Question[] = [
         content: `<h1 style="font-size: 50px;"></h1>`,
         bomb: {
             delay: 2000,
-            duration: 10
+            duration: 8
         },
         questionEl: querySelectorHTML("#q81"),
         colorPalette: "darkpurple",
@@ -4218,7 +4233,7 @@ export const questions: Question[] = [
             },
             {
                 text: "A VAST, FROZEN LAKE CALLED COCYTUS.",
-                correct: true,
+                correct: false,
                 fontSize: 30
             },
             {

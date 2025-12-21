@@ -1,0 +1,12 @@
+{
+    "achievements": {
+        "ach_01": {
+            "title": "PERFECTION.",
+            "image": "/imgs/achievements/perfection.png"
+        },
+        "ach_02": {
+            "title": "DEMON SLAYER!",
+            "image": "/imgs/achievements/perfection.png"
+        }
+    }
+}

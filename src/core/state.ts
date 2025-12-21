@@ -1,4 +1,5 @@
 import { QualityLevel } from "../etc/qualityLevel"
+import { ColorPalette } from "../etc/showQuestion"
 
 export const MUSIC_VOLUME = 0.15
 export const SFX_VOLUME = 0.2
@@ -23,7 +24,8 @@ type StateObject = {
     canUseCarrot: boolean,
     winner: boolean,
     quality: QualityLevel
-    tracksPlaying: string[]
+    tracksPlaying: string[],
+    currentColorPalette: ColorPalette
 }
 
 export const state: StateObject = {
@@ -32,7 +34,7 @@ export const state: StateObject = {
         music: MUSIC_VOLUME
     },
     inMainMenu: false, 
-    questionNumber: 89,
+    questionNumber: 1,
     currentBombTimer: 0,
     currentBombInterval: 0,
     lives: 3,
@@ -41,10 +43,11 @@ export const state: StateObject = {
     ignoreInput: false,
     spawnBouncyThings: true,
     enableTab: false,
-    devMode: true,
+    devMode: false,
     finale: false,
     canUseCarrot: false,
     winner: false,
     quality: QualityLevel.HIGH,
-    tracksPlaying: []
+    tracksPlaying: [],
+    currentColorPalette: "normal"
 }

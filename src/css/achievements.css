@@ -1,0 +1,155 @@
+.achievementcont {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: fit-content;
+    height: fit-content;
+    margin: 15px;
+    z-index: -9999;
+}
+
+.achievement {
+    position: relative;
+    width: 350px;
+    height: 140px;
+    background: linear-gradient(#ff9b61, #ff8e59, #ff7a59, #ff6843);
+    translate: -500px 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    corner-shape: squircle;
+    border-radius: 35px;
+    box-shadow: 0 0 30px #ff5f2fd7, inset 0 0 0 6px #ff662965;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    cursor: url("/imgs/grabby.png"), auto;
+}
+
+/* .achievement:hover {
+    transform: translateY(-5px) scale(1.02);
+    background: linear-gradient(#ff8661, #ff716c, #ff4e37);
+    box-shadow: 0 0 30px #ff3d2fd7, inset 0 0 0 6px #ff422965;
+}
+
+.achievement:active {
+    background: linear-gradient(#ff4b33, #ff4b4b, #ff5a30);
+    transform: translateY(3px) scale(0.99);
+    box-shadow: 0 0 30px #ff2515d7, inset 0 0 0 6px #ff2a0e98;
+    corner-shape: bevel;
+    border-radius: 20px;
+} */
+
+.achievement:active::before {
+    opacity: 0.07;
+}
+
+.achievement::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("/imgs/qbuttonbg.png");
+    opacity: 0.1;
+    animation: achbgpan 10s linear infinite alternate;
+}
+
+.achievement.active {
+    animation: achappear 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.achievement.achgone {
+    translate: 0 0;
+    animation: achgone 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes achappear {
+    50% {
+        translate: 0 0;
+        scale: 1 0.8;
+        rotate: -2deg;
+    }
+
+    70% {
+        translate: 0 0;
+        scale: 1 1.15;
+    }
+
+    100% {
+        translate: 0 0;
+        scale: 1 1;
+    }
+}
+
+@keyframes achgone {
+    50% {
+        scale: 1 0.9;
+        rotate: 2deg;
+    }
+
+    70% {
+        scale: 1 1.15;
+        rotate: -2deg;
+    }
+
+    100% {
+        translate: -500px 0;
+    }
+}
+
+@keyframes achbgpan {
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+.achievementimg {
+    width: 80px;
+    height: 80px;
+    background-size: 100px 80px;
+    corner-shape: squircle;
+    border-radius: 35px;
+    margin-left: 25px;
+    z-index: 10;
+    background-size: 80px 80px;
+    filter: drop-shadow(0 0 20px #ff510073);
+}
+
+.achcolumn {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    z-index: 10;
+    width: 200px;
+    text-align: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.achcolumn h1 {
+    background-color: #ff7839;
+    background-image: linear-gradient(#ff5024, #ff0909);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #ff2020;
+    margin-bottom: 0;
+    font-size: 29px;
+    text-align: center;
+}
+
+.achcolumn span {
+    background-color: #ff7839;
+    background-image: linear-gradient(#ffb0b0, #ffd3bf);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+    text-shadow: 0 0 20px #ff2a2a62;
+    font-weight: bolder;
+    font-size: 23px;
+}

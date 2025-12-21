@@ -15,6 +15,7 @@ import { trackFPS } from "./etc/trackFPS";
 import { createBoom, createObjectOnPos, qsaHTML, querySelectorHTML, random, showObjectWithBounce, wait } from "./utils";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { window } from "@tauri-apps/api"
+import { getCarrot } from "./powerups";
 
 if ("scrollRestoration" in history) {
     history.scrollRestoration = "manual"
@@ -62,6 +63,8 @@ document.addEventListener("keydown", (e) => {
         onWrongAns()
     }
 
+    if (e.ctrlKey && e.key == "o") getCarrot({ position: { x: 50, y: 50 }, slot: 2, usePercentages: true })
+
     if (e.ctrlKey && e.key == "a") onCorrectAns()
 
     if (e.key == "q") {
@@ -78,9 +81,22 @@ document.addEventListener("keydown", (e) => {
         })
     }
 
+    if (e.ctrlKey && e.key == "w") {
+        localStorage.removeItem("unlockedAchievements")
+        popup({
+            header: { content: "DONE" },
+            bodyContent: `unlockedachievemnts ls key deleted`,
+            buttons: [
+                { text: "OK", onClick() {
+                    closeCurrentPopup()
+                }, }
+            ]
+        })
+    } 
+
     if (e.ctrlKey && e.key == "k") setQualityLevel(0)
 
-    if (e.ctrlKey && e.key == "o") {
+    if (e.ctrlKey && e.key == "7") {
         state.questionNumber = 89
         showQuestion(state.questionNumber)
     }
@@ -439,7 +455,7 @@ function onAbout() {
         bodyContent: `
             <div class="aboutpage">
                 <div class="row" style="gap: 15px">
-                    GAME VERSION: <span class="aboutstat">1.0.0</span>
+                    GAME VERSION: <span class="aboutstat">1.0.1</span>
                 </div>
                 <div class="row" style="gap: 15px">
                     TAURI VERSION: <span class="aboutstat">2.5.1</span>
@@ -575,7 +591,7 @@ function onStats() {
         `,
         buttons: [
             {
-                text: "close",
+                text: "CLOSE",
                 onClick() {
                     closeCurrentPopup()
                 },
@@ -718,7 +734,7 @@ async function tryAgain() {
     const gameoverscreen = querySelectorHTML(".gameoverscreen")
     const bg = querySelectorHTML(".bg")
 
-    bg.classList.remove("gameover")
+    if (!state.finale) bg.classList.remove("gameover")
     gameoverscreen.classList.remove("active")
 
     localStorage.setItem("quizOnReload", "true")
@@ -999,14 +1015,31 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
     const cont = querySelectorHTML(".container")
     const gameOverScreen = querySelectorHTML(".gameoverscreen")
 
-    cont.classList.add("fly")
+    if (!state.finale) {
+        cont.classList.add("fly")
+    } else cont.classList.add("finalefly")
 
     clearBombInterval()
-    playAudio({ id: "gameover" })
+
+    if (!state.finale) {
+        playAudio({ id: "gameover" })
+    } else {
+        playAudio({ id: "bigBoom" })
+        playAudio({ id: "shotgun" })
+        playAudio({ id: "fart" })
+
+        setTimeout(() => {
+            playAudio({ id: "herbertOpenMouthAngry" })
+        }, 1000);
+    }
+
     pauseMusic()
     pauseFinaleMusic()
 
     let effectCount = 3;
+    let boomVariant = "normal"
+
+    if (state.finale) boomVariant = "finale"
 
     if (state.quality == QualityLevel.LOW) effectCount = 1
 
@@ -1028,6 +1061,7 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
             width: 600,
             height: 400,
             usePercentages: true,
+            variant: boomVariant
         })
     }
 
@@ -1037,9 +1071,14 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
             y: 15,
             width: 300,
             height: 200,
-            usePercentages: true
+            usePercentages: true,
+            variant: boomVariant
         })
     }
+
+    let flyingImageUrl = "/imgs/truffle01.png"
+
+    if (state.finale) flyingImageUrl = "/imgs/q95/player.gif"
 
     flyingImage({
         startPos: {
@@ -1051,7 +1090,7 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
             y: 0
         },
         easing: "linear",
-        image: "/imgs/truffle01.png",
+        image: flyingImageUrl,
         width: 72,
         height: 64,
         duration: 1,
@@ -1060,9 +1099,13 @@ export async function gameOverSequence({ bomb }: { bomb?: boolean }) {
 
     await wait(1000)
 
-    setBackgroundType("gameover")
+    querySelectorHTML(".bg").classList.add("gameover")
     gameOverScreen.classList.add("active")
     playAudio({ id: "clank" })
+
+    setTimeout(() => {
+        querySelectorHTML(".bg").classList.remove("finale")
+    }, 100);
 
     await wait(500)
     showObjectWithBounce({
@@ -1291,6 +1334,10 @@ export async function manageGameFinale() {
 
     // @ts-ignore
     document.body.style = ""
+
+    const bg = querySelectorHTML(".bg")
+    bg.style.animationDuration = "10s"
+
     state.finale = true
 
     gameAudioObj?.pause()

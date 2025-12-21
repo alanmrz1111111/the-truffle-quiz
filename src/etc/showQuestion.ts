@@ -1,5 +1,6 @@
 import { state } from "../core/state"
 import { gameOverSequence, updateLivesLabel } from "../main"
+import { setCarrotPowerupColor } from "../powerups"
 import { create, Easing, qsaHTML, querySelectorHTML, random, showObjectWithBounce, wait } from "../utils"
 import { questions } from "./questions"
 
@@ -9,7 +10,7 @@ export type Answer = {
     fontSize: number
 }
 
-type ColorPalette = "allwhite" | "normal" | "darkpurple"
+export type ColorPalette = "allwhite" | "normal" | "darkpurple"
 
 type MoveTextOpts = {
     duration: number,
@@ -39,6 +40,8 @@ export type Question = {
 export function setColorPalette(palette: ColorPalette) {
     if (state.finale) return
 
+    state.currentColorPalette = palette
+
     const qring = querySelectorHTML(".qring")
     const qtext = querySelectorHTML(".questionarea > h1")
     const bottomrow = querySelectorHTML(".bottomrow")
@@ -49,21 +52,23 @@ export function setColorPalette(palette: ColorPalette) {
             qring.style.filter = "brightness(0) invert(1)"
             qtext.style.filter = "brightness(0) invert(1)";
             bottomrow.style.filter = "brightness(0) invert(1)";
-            if (carrotRow) carrotRow.style.filter = "brightness(0) invert(1)"
+            if (carrotRow) setCarrotPowerupColor("allwhite")
             break;
 
         case "normal":
             qring.style.filter = "none"
             qtext.style.filter = "none";
             bottomrow.style.filter = "none";
-            if (carrotRow) carrotRow.style.filter = "none"
+            if (carrotRow) setCarrotPowerupColor("normal")
             break;
 
         case "darkpurple":
             qring.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)"
             qtext.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)";
             bottomrow.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)";
-            if (carrotRow) carrotRow.style.filter = "hue-rotate(300deg) saturate(5) brightness(0.5)"
+            if (carrotRow) {
+                setCarrotPowerupColor("darkpurple")
+            }
             break;
     }
 }
@@ -162,7 +167,12 @@ export async function showQuestion(questionNumber: number) {
     questionArea.append(questionText)
 
     if (prevQst) {
-        if (prevQst.colorPalette != "normal") setColorPalette("normal")
+        if (prevQst.colorPalette != "normal") {
+            setColorPalette("normal")
+            state.currentColorPalette = "normal"
+
+            if (querySelectorHTML(".bottomrightrow")) setCarrotPowerupColor("normal");
+        }
     }
 
     if (qst.bomb) {

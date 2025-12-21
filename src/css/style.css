@@ -21,6 +21,11 @@ body {
     align-items: center;
 }
 
+body.impact {
+    filter: invert(1);
+    rotate: 5deg;
+}
+
 #viewport {
     width: 100vw;
     height: 100vh;
@@ -562,13 +567,30 @@ body.finale button:hover {
     align-items: center;
 }
 
+.bomb.obliterated {
+    z-index: 1000;
+}
+
 .bomb.finale {
-    background-image: url("../anims/finalebomb.gif");
+    background-image: url("../anims/finalebomb02.gif");
     filter: drop-shadow(0 0 20px #4d0000);
     background-position: center center;
-    margin: 14px;
+    margin: 18px;
     width: 140px;
     height: 140px;
+}
+
+.bomb.suffer {
+    scale: 1;
+    animation: bombsuffer 0.05s linear infinite;
+}
+
+@keyframes bombsuffer {
+    100% {
+        scale: 0.8 1.2;
+        filter: invert(1);
+        rotate: 260deg;
+    }
 }
 
 .bomb.finale>.bombtext {
@@ -582,7 +604,7 @@ body.finale button:hover {
     -moz-text-fill-color: transparent;
     text-shadow: 0 0 20px #ff3131c4;
     animation: bombtextpulsefinale 1s ease infinite;
-    translate: -18px 5px;
+    translate: -13px -2px;
     font-size: 70px;
 }
 
@@ -1014,6 +1036,24 @@ body.finale button:hover {
 .container.fly {
     animation: contfly 1s ease forwards;
     pointer-events: none;
+}
+
+.container.finalefly {
+    animation: finalefly 1s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes finalefly {
+    10% {
+        transform-origin: top left;
+        transform: rotate(5deg);
+    }
+
+    100% {
+        transform-origin: top left;
+        transform: rotate(360deg) translateY(500px) scale(0);
+        opacity: 0;
+    }
 }
 
 .container.end {
@@ -1547,7 +1587,7 @@ p {
 
 @keyframes scalebounce {
     50% {
-        scale: 1.086;
+        scale: 1.1;
     }
 
     70% {
@@ -1845,6 +1885,7 @@ p {
     gap: 10px;
     width: fit-content;
     height: 100px;
+    padding-bottom: 15px;
     margin: 20px;
 }
 
@@ -2233,11 +2274,7 @@ p {
     filter: drop-shadow(0 0 20px #ff7b469c);
     animation: carrotslotidle 1s ease infinite alternate;
     cursor: url("/imgs/grabby.png"), auto;
-    transition: all 0.3s ease;
-}
-
-.carrotslot.nope {
-    animation: carrotslotnope 0.3s ease alternate;
+    transition: all 0.3s ease, filter 0s ease, background-image 0s ease;
 }
 
 @keyframes carrotslotnope {
@@ -2262,9 +2299,23 @@ p {
     animation: activecarrotslotidle 1s ease infinite alternate;
 }
 
+.carrotslot.allwhitepop {
+    background-image: url("/imgs/powerups/carrot_slot_white.png");
+    filter: brightness(0) invert(1) drop-shadow(0 0 20px #ffffff52);
+}
+
+.carrotslot.allwhite {
+    background-image: url("/imgs/powerups/carrot_slot_white_empty.png");
+    filter: brightness(0) invert(1) drop-shadow(0 0 20px #ffffff52);
+}
+
 .carrotslot:hover {
     scale: 1.1;
     filter: drop-shadow(0 0 20px #ff7a46) saturate(120%);
+}
+
+.carrotslot.nope {
+    animation: carrotslotnope 0.3s ease alternate;
 }
 
 @keyframes activecarrotslotidle {
@@ -2703,4 +2754,92 @@ p {
         rotate: 360deg;
         left: -20%;
     }
+}
+
+.carrotEffect {
+    position: fixed;
+    top: 93%;
+    left: 80%;
+    width: 72px;
+    height: 90px;
+    z-index: 9999;
+    background-image: url("/imgs/powerups/carrot_use.png");
+    background-size: 72px 90px;
+    animation: carrotEffectAnim 0.8s ease forwards;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.carrotEffect.insane {
+    background-image: url("/imgs/powerups/carrot_insane.gif");
+    width: 120px;
+    background-size: 120px 90px;
+}
+
+.carrotEffect.cgone {
+    animation: carrotEffectGone 0.8s ease forwards;
+}
+
+@keyframes carrotEffectGone {
+    0% {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(2.8) rotate(-380deg);
+    }
+
+    100% {
+        top: 120%;
+        left: -20%;
+        transform: translate(-50%, -50%) scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes carrotEffectAnim {
+    100% {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(2.8) rotate(-380deg);
+    }
+}
+
+.carrotzap {
+    position: fixed;
+    transform-origin: center left;
+    transform: translate(-50%, -50%) scaleX(0);
+    width: 200px;
+    height: 150px;
+    background-image: url("/imgs/powerups/zap.gif");
+    background-size: 200px 150px;
+    top: 20%;
+    left: 70%;
+    opacity: 0.8;
+    display: none;
+    filter: drop-shadow(0 0 20px #a4e2ff);
+    z-index: 1000;
+}
+
+@keyframes carrotzapappear {
+    100% {
+        transform: translate(-50%, -50%) scaleX(2);
+    }
+}
+
+.carrotzap.active {
+    display: block;
+    animation: carrotzapappear 0.05s linear forwards;
+}
+
+.carrotattackoverlay {
+    position: fixed;
+    inset: 0;
+    background-color: #00000057;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.carrotattackoverlay.active {
+    opacity: 1;
+    pointer-events: all;
 }

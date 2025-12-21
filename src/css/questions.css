@@ -329,6 +329,7 @@
 
 #q35 {
     display: none;
+    cursor: none;
 }
 
 .q35bg {
@@ -628,7 +629,7 @@
 
 .q55obj.herbert {
     width: 180px;
-    background-image: url("/imgs/q55/herbert.png");
+    background-image: url("/imgs/q81/herbert.png");
 }
 
 .q55obj.duck {

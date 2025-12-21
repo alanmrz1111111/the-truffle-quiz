@@ -121,7 +121,7 @@ export function showObjectWithBounce(args: ShowObjectWithBounceArgs) {
     }
 }
 
-export function createBoom({ x, y, width, height, usePercentages, cssLine = "" }: { x: number, y: number, width: number, height: number, usePercentages: boolean, cssLine?: string }) {
+export function createBoom({ x, y, width, height, usePercentages, variant = "normal", cssLine = "" }: { x: number, y: number, width: number, height: number, usePercentages: boolean, variant?: string, cssLine?: string }) {
     const boom = createObjectOnPosB({
         selector: "img",
         pos: { x, y },
@@ -131,6 +131,10 @@ export function createBoom({ x, y, width, height, usePercentages, cssLine = "" }
 
     boom.src = "/imgs/boom02.png"
     setImgDimensions(width, height, boom)
+
+    if (variant == "finale") {
+        boom.src = "/imgs/boom03.png"
+    }
 
     boom.style.animation = "boom 0.4s linear forwards"
     boom.draggable = false
